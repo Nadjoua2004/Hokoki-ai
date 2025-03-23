@@ -1,48 +1,23 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet,TouchableOpacity, Text, Image, Button, View } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-const logoImg= require("./assets/logo.png")
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import BeginScreen from "./pages/BeginScreen";
+import FirstPage from "./pages/firstPage"; // تأكد أن الاسم يتطابق مع اسم الملف تمامًا;
+import SecondPage from "./pages/secondPage";
+import SignIn from "./pages/SignIn";
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Image source={logoImg} style={{width:121,height:121} }/>
-      <Text style={{  fontSize: 30,fontWeight: 'bold',color: 'white',} }>Hokoki ai </Text>
-      <StatusBar style="auto" />
-      <Text style={{  lineHeight: 24, marginHorizontal: 65 ,fontSize: 19,fontWeight: 'bold',color: 'white',} }>Le premier assistant juridique alimenté par l'IA en Algérie</Text>
-      <TouchableOpacity 
-  style={{
-    backgroundColor: 'white',
-    position: 'absolute',
-    bottom: 88,
-    width: 193,
-    height: 52,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5, 
-  }}
-  onPress={() => console.log('worked!')}
->
-
-  <Text style={{ color: '#003366', fontSize: 18, fontWeight: 'bold' }}>
-    Allons-y        <Icon name="arrow-right" size={18} color="#003366" style={{ marginRight: 10 }} />
-  </Text>
-</TouchableOpacity>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        
+        <Stack.Screen name="FirstPage" component={FirstPage} />
+        <Stack.Screen name="SecondPage" component={SecondPage} />
+        <Stack.Screen name="BeginScreen" component={BeginScreen} />
+        <Stack.Screen name="SignIn" component={SignIn} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#003366',
-    gap:34,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
