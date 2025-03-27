@@ -52,6 +52,7 @@ export default function BeginScreen() {
 
 const styles = StyleSheet.create({
   container: {
+    paddingBottom: 124, 
     flex: 1,
     backgroundColor: "#003366",
     justifyContent: "center",
@@ -59,6 +60,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
+    paddingBottom: 40, 
     fontSize: 24,
     fontWeight: "bold",
     color: "#fff",
@@ -70,16 +72,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 30,
   },
+  
   button: {
-    width: "50%",
-    height: 50,
+    backgroundColor: 'white',
+    position: 'absolute',
+    bottom: 198,
+    width: 193,
+    height: 52,
     borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    alignSelf: "center",
-    marginVertical: 10,
-    backgroundColor: "#fff",
-    shadowColor: "#000",
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
