@@ -1,4 +1,5 @@
-import React from 'react';
+/*import React from 'react';
+
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -68,4 +69,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default firstPage;
+export default firstPage;*/
+
