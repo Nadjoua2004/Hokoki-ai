@@ -1,4 +1,5 @@
-import React from 'react';
+/*import React from 'react';
+
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, TouchableOpacity, Text, Image, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -53,4 +54,4 @@ const styles = StyleSheet.create({
     elevation: 5, 
   }
 });
-
+*/
