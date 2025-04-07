@@ -1,174 +1,136 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ToastAndroid, KeyboardAvoidingView, Platform } from "react-native";
+import { Button, Checkbox } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default function SignInScreen() {
+export default function LogIn() {
   const navigation = useNavigation();
-  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [email, setEmail] = useState("");
+
+  const [password, setPassword] = useState("");
+  const [agree, setAgree] = useState(false); 
+
+ 
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Hi, Welcome! 👋</Text>
+   
+      <View style={styles.innerContainer}>
+        <Text style={styles.title}>Hi, Welcome</Text>
 
-      {/* Email Input */}
-      <Text style={styles.label}>Email address</Text>
-      <TextInput style={styles.input} placeholder="Your email" keyboardType="email-address" />
-
-      {/* Password Input */}
-      <Text style={styles.label}>Password</Text>
-      <View style={styles.passwordContainer}>
+     
+      
+        <Text style={styles.label}>Email</Text>
         <TextInput
-          style={styles.passwordInput}
-          placeholder="Password"
-          secureTextEntry={!passwordVisible}
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor="#ccc"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
         />
-        <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
-          <MaterialCommunityIcons
-            name={passwordVisible ? "eye-off" : "eye"}
-            size={24}
-            color="#666"
-          />
+        
+        <Text style={styles.label}>Password</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          placeholderTextColor="#ccc"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+
+       <TouchableOpacity onPress={() => navigation.navigate("ForgotPass")}>
+                 <Text style={styles.link1}>Forgot password? </Text>
+               </TouchableOpacity>
+
+        <Button
+          mode="contained"
+          style={styles.button}
+          labelStyle={styles.buttonText}
+        
+        >
+          Log in
+        </Button>
+
+        <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
+          <Text style={styles.link}>Don't have an account? Sign Up</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Forgot Password */}
-      <TouchableOpacity>
-        <Text style={styles.forgotPassword}>Forgot password?</Text>
-      </TouchableOpacity>
-
-      {/* Login Button */}
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Log in</Text>
-      </TouchableOpacity>
-
-      {/* OR Divider */}
-      <View style={styles.orContainer}>
-        <View style={styles.line} />
-        <Text style={styles.orText}>Or with</Text>
-        <View style={styles.line} />
-      </View>
-
-      {/* Social Login Buttons */}
-      <View style={styles.socialContainer}>
-        <TouchableOpacity style={styles.socialButton}>
-          <Text style={styles.socialText}>Facebook</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.socialButton}>
-          <Text style={styles.socialText}>Google</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Sign Up Link */}
-      <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-        <Text style={styles.signUpText}>Don't have an account? <Text style={styles.signUpLink}>Sign up</Text></Text>
-      </TouchableOpacity>
-    </View>
+  
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8FAFC",
-    justifyContent: "center",
-    paddingHorizontal: 25,
+    backgroundColor: "#F6F9FF",
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#1E293B",
-    marginBottom: 20,
+  innerContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  
   },
   label: {
     fontSize: 14,
-    fontWeight: "600",
-    color: "#334155",
+    alignSelf: 'flex-start',
+    marginLeft: 10,
     marginBottom: 5,
+    color: 'black',
   },
-  input: {
+  title: {
+    fontSize: 30,
+    alignSelf: 'flex-start',
+    marginLeft: 10,
+    fontWeight: "bold",
+    color: "#003366",
+    marginBottom: 28,
+  },
+  input: { 
+    width: 300,
     height: 50,
-    backgroundColor: "#FFF",
-    borderRadius: 8,
+    backgroundColor: "#fff",
+    borderColor: '#000001',
+    borderRadius: 10,
     paddingHorizontal: 15,
     fontSize: 16,
     marginBottom: 15,
-    borderWidth: 1,
-    borderColor: "#CBD5E1",
+    color: "#003366",
   },
-  passwordContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#FFF",
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    borderWidth: 1,
-    borderColor: "#CBD5E1",
-    height: 50,
-    marginBottom: 15,
-  },
-  passwordInput: {
-    flex: 1,
-    fontSize: 16,
-  },
-  forgotPassword: {
-    color: "#3B82F6",
-    fontSize: 14,
-    textAlign: "right",
-    marginBottom: 20,
-  },
+  
+  
   button: {
-    backgroundColor: "#1E293B",
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: "center",
+    backgroundColor: '#003366',
+    width: 300,
+    height: 50,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
+    marginTop: 10, 
+    
   },
   buttonText: {
-    color: "#FFF",
+    color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
   },
-  orContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 20,
-  },
-  line: {
-    flex: 1,
-    height: 1,
-    backgroundColor: "#CBD5E1",
-  },
-  orText: {
-    marginHorizontal: 10,
-    color: "#64748B",
-    fontSize: 14,
-  },
-  socialContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginBottom: 20,
-  },
-  socialButton: {
-    backgroundColor: "#FFF",
-    borderWidth: 1,
-    borderColor: "#CBD5E1",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginHorizontal: 10,
-  },
-  socialText: {
+  link: {
+    marginTop: 80,
+    color: "#003366",
     fontSize: 16,
-    color: "#1E293B",
-    fontWeight: "bold",
   },
-  signUpText: {
-    textAlign: "center",
-    fontSize: 14,
-    color: "#64748B",
-  },
-  signUpLink: {
-    color: "#3B82F6",
-    fontWeight: "bold",
+  link1: {
+    marginTop: 10,
+    marginBottom: 28,
+    alignSelf: 'flex-start',
+    marginLeft: 10,
+    color: "#003366",
+    fontSize: 16,
   },
 });
