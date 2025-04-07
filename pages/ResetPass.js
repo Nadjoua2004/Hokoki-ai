@@ -3,78 +3,48 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ToastAndroid, Keyb
 import { Button, Checkbox } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
-export default function SignIn() {
+export default function ResetPass() {
   const navigation = useNavigation();
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [agree, setAgree] = useState(false); 
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState(false); 
 
-  const handleSignIn = () => {
-    if (!agree) {
-      ToastAndroid.show("You must agree to the terms before signing in!", ToastAndroid.SHORT);
-      return;
-    }
-    console.log("Signing in...");
-  };
-
+  
+ 
   return (
    
       <View style={styles.innerContainer}>
-        <Text style={styles.title}>Create account</Text>
+        <Text style={styles.title}>Forgot Password</Text>
+         <Text style={styles.label2}> Please type something you’ll remember</Text>
+      
         
-        <Text style={styles.label}>Username</Text>
+        <Text style={styles.label}>Email address</Text>
         <TextInput
           style={styles.input}
-          placeholder="Your username"
+          placeholder="New Password"
           placeholderTextColor="#ccc"
-          value={username}
-          onChangeText={setUsername}
+          value={newPassword}
+          onChangeText={setNewPassword}
           keyboardType="email-address"
         />
-        
-        <Text style={styles.label}>Email</Text>
         <TextInput
           style={styles.input}
-          placeholder="Email"
+          placeholder="Confirm new Password"
           placeholderTextColor="#ccc"
-          value={email}
-          onChangeText={setEmail}
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
           keyboardType="email-address"
         />
-        
-        <Text style={styles.label}>Password</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor="#ccc"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-
-        <View style={styles.checkboxContainer}>
-          <Checkbox
-            status={agree ? "checked" : "unchecked"}
-            onPress={() => setAgree(!agree)}
-            color='#003366'
-          />
-          <Text style={styles.checkboxText}>I agree to the Terms & Conditions</Text>
-        </View>
-
         <Button
           mode="contained"
           style={styles.button}
           labelStyle={styles.buttonText}
-          onPress={handleSignIn}
+          
         >
-          Sign In
+          Reset Password
         </Button>
-        <TouchableOpacity onPress={() => navigation.navigate("LawyerAcc")}>
-          <Text style={styles.link1}>Are you a lawyer? Create account </Text>
-        </TouchableOpacity>
+
         <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
-          <Text style={styles.link}>Already have an account?  Log in</Text>
+          <Text style={styles.link}>Remember password? Log in</Text>
         </TouchableOpacity>
       </View>
   
@@ -100,6 +70,13 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     color: 'black',
   },
+  label2: {
+    fontSize: 16,
+    alignSelf: 'flex-start',
+    marginLeft: 10,
+    marginBottom: 45,
+    color: 'black',
+  },
   title: {
     fontSize: 30,
     alignSelf: 'flex-start',
@@ -119,17 +96,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     color: "#003366",
   },
-  checkboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 100,
-    marginBottom: 15,
-    width: 300,
-  },
-  checkboxText: {
-    color: "#003366",
-    fontSize: 14,
-  },
+  
   button: {
     backgroundColor: '#003366',
     width: 300,
@@ -142,7 +109,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 5,
     elevation: 5,
-    marginTop: 10, // Add some margin above the button
+    marginTop: 10, 
   },
   buttonText: {
     color: "#fff",
@@ -150,13 +117,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   link: {
-    marginTop: 60,
+    marginTop: 80,
     color: "#003366",
     fontSize: 16,
-  },
-  link1: {
-    marginTop: 40,
-    color: "#003366",
-    fontSize: 18,
   },
 });

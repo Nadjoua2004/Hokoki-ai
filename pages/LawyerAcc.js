@@ -21,7 +21,7 @@ export default function SignIn() {
   return (
    
       <View style={styles.innerContainer}>
-        <Text style={styles.title}>Create account</Text>
+        <Text style={styles.title}>Create Lawyer account</Text>
         
         <Text style={styles.label}>Username</Text>
         <TextInput
@@ -70,9 +70,7 @@ export default function SignIn() {
         >
           Sign In
         </Button>
-        <TouchableOpacity onPress={() => navigation.navigate("LawyerAcc")}>
-          <Text style={styles.link1}>Are you a lawyer? Create account </Text>
-        </TouchableOpacity>
+        
         <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
           <Text style={styles.link}>Already have an account?  Log in</Text>
         </TouchableOpacity>
@@ -142,7 +140,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 5,
     elevation: 5,
-    marginTop: 10, // Add some margin above the button
+    marginTop: 10, 
   },
   buttonText: {
     color: "#fff",
@@ -150,7 +148,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   link: {
-    marginTop: 60,
+    marginTop: 80,
     color: "#003366",
     fontSize: 16,
   },
