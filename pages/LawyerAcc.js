@@ -8,6 +8,7 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [id, setId] = useState("");
   const [agree, setAgree] = useState(false); 
 
   const handleSignIn = () => {
@@ -50,6 +51,15 @@ export default function SignIn() {
           placeholderTextColor="#ccc"
           value={password}
           onChangeText={setPassword}
+          secureTextEntry
+        />
+        <Text style={styles.label}>ID CAPA</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="ID of your CAPA certifecate"
+          placeholderTextColor="#ccc"
+          value={id}
+          onChangeText={setId}
           secureTextEntry
         />
 

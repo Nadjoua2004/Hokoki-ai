@@ -13,9 +13,10 @@ export default function LogIn() {
  
 
   return (
+    
    
       <View style={styles.innerContainer}>
-        <Text style={styles.title}>Hi, Welcome</Text>
+        <Text style={styles.title}>Hi, Welcome 👋</Text>
 
      
       
