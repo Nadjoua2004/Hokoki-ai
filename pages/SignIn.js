@@ -24,6 +24,9 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [agree, setAgree] = useState(false); 
  // 1. Very very impoetent don't mess with it pls (handleSignIn function)
+
+
+ 
   const handleSignIn = async () => {
   
     if (!agree) {
@@ -67,6 +70,10 @@ export default function SignIn() {
       console.error('Registration error:', error);
     }
   };
+
+
+
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
