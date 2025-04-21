@@ -53,7 +53,7 @@ export default function LogIn() {
           Log in
         </Button>
 
-        <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
+        <TouchableOpacity onPress={() => navigation.navigate("Welcom")}>
           <Text style={styles.link}>Don't have an account? Sign Up</Text>
         </TouchableOpacity>
       </View>
