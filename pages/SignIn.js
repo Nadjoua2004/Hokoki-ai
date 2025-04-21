@@ -60,7 +60,7 @@ export default function SignIn() {
       // . Handle response
       if (response.ok) {
         ToastAndroid.show('Registration successful!', ToastAndroid.SHORT);
-        navigation.navigate('Welcom'); 
+        navigation.navigate('ChatPage'); 
       } else {
         ToastAndroid.show(data.message || 'Registration failed', ToastAndroid.SHORT);
       }
@@ -151,13 +151,13 @@ export default function SignIn() {
               Sign In
             </Button>
 
-            <TouchableOpacity onPress={() => navigation.navigate("LawyerAcc")}>
-              <Text style={styles.link1}>Are you a lawyer? Create account </Text>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("LawyerAcc")}>
+              <Text style={styles.buttonText}> Are you a lawyer?</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
               <Text style={styles.link}>Already have an account? Log in</Text>
             </TouchableOpacity>
-          </View>
+          </View>   
         </ScrollView>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>

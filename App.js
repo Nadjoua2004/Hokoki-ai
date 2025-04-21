@@ -9,7 +9,7 @@ import ForgotPass from './pages/ForgotPass.js';
 import LawyerAcc from './pages/LawyerAcc.js';
 import ResetPass from './pages/ResetPass.js';
 import Welcom from './pages/Welcom.js';
-
+import ChatPage from './pages/ChatPage.js';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -24,6 +24,7 @@ export default function App() {
         <Stack.Screen name="LawyerAcc" component={LawyerAcc} />
         <Stack.Screen name="ResetPass" component={ResetPass} />
         <Stack.Screen name="Welcom" component={Welcom} />
+        <Stack.Screen name="ChatPage" component={ChatPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

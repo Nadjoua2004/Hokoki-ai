@@ -5,18 +5,56 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function SignIn() {
   const navigation = useNavigation();
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
+const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [phonenumb, setPhonenumb] = useState("");
   const [password, setPassword] = useState("");
   const [id, setId] = useState("");
   const [agree, setAgree] = useState(false); 
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
+
     if (!agree) {
       ToastAndroid.show("You must agree to the terms before signing in!", ToastAndroid.SHORT);
       return;
     }
     console.log("Signing in...");
+     if (!name || !surname || !phonenumb || !email || !password || !id) {
+          ToastAndroid.show("All fields are required!", ToastAndroid.SHORT);
+          return;
+        }
+      
+        try {
+         
+          const response = await fetch('http://192.168.43.76:5000/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name,
+              surname,
+              phonenumb,
+              email,
+              password,
+              id,
+              agree
+            }),
+          });
+      
+          const data = await response.json();
+      
+          // . Handle response
+          if (response.ok) {
+            ToastAndroid.show('Registration successful!', ToastAndroid.SHORT);
+            navigation.navigate('Welcom'); 
+          } else {
+            ToastAndroid.show(data.message || 'Registration failed', ToastAndroid.SHORT);
+          }
+        } catch (error) {
+          // 5. Network/other errors
+          ToastAndroid.show(`Error: ${error.message}`, ToastAndroid.SHORT);
+          console.error('Registration error:', error);
+        }
   };
 
   return (
@@ -24,17 +62,31 @@ export default function SignIn() {
       <View style={styles.innerContainer}>
         <Text style={styles.title}>Create Lawyer account</Text>
         
-        <Text style={styles.label}>Username</Text>
         <TextInput
-          style={styles.input}
-          placeholder="Your username"
-          placeholderTextColor="#ccc"
-          value={username}
-          onChangeText={setUsername}
-          keyboardType="email-address"
-        />
+                     style={styles.input}
+                     placeholder="Your Name"
+                     placeholderTextColor="#ccc"
+                     value={name}
+                     onChangeText={setName}
+                   />
+       
         
-        <Text style={styles.label}>Email</Text>
+          <TextInput
+                      style={styles.input}
+                      placeholder="Your Surname"
+                      placeholderTextColor="#ccc"
+                      value={surname}
+                      onChangeText={setSurname}
+                    />
+        
+      <TextInput
+                    style={styles.input}
+                    placeholder="Your Number"
+                    placeholderTextColor="#ccc"
+                    value={phonenumb}
+                    onChangeText={setPhonenumb}
+                    keyboardType="phone-pad"
+                  />
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -44,7 +96,7 @@ export default function SignIn() {
           keyboardType="email-address"
         />
         
-        <Text style={styles.label}>Password</Text>
+       
         <TextInput
           style={styles.input}
           placeholder="Password"
@@ -53,7 +105,7 @@ export default function SignIn() {
           onChangeText={setPassword}
           secureTextEntry
         />
-        <Text style={styles.label}>ID CAPA</Text>
+       
         <TextInput
           style={styles.input}
           placeholder="ID of your CAPA certifecate"
