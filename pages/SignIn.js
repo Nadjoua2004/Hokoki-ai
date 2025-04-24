@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { Button, Checkbox } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import { API_URL } from '.././config';
 
 export default function SignIn() {
   const navigation = useNavigation();
@@ -42,7 +43,7 @@ export default function SignIn() {
   
     try {
      
-      const response = await fetch('http://192.168.43.76:5000/api/register', {
+      const response = await fetch(`${API_URL}/api/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -1,65 +1,112 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ToastAndroid, KeyboardAvoidingView, Platform } from "react-native";
-import { Button, Checkbox } from "react-native-paper";
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  StyleSheet, 
+  ToastAndroid, 
+  KeyboardAvoidingView, 
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard
+} from "react-native";
+import { Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import { API_URL } from '../config';
+
 
 export default function LogIn() {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
-  const [agree, setAgree] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
- 
+  const handleLogin = async () => {
+    if (!email || !password) {
+      ToastAndroid.show("Email and password are required!", ToastAndroid.SHORT);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_URL}/api/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        ToastAndroid.show('Login successful!', ToastAndroid.SHORT);
+        navigation.navigate('LawyerMain'); // Or your main app screen
+      } else {
+        ToastAndroid.show(data.message || 'Login failed', ToastAndroid.SHORT);
+      }
+    } catch (error) {
+      ToastAndroid.show(`Network error: ${error.message}`, ToastAndroid.SHORT);
+      console.error('Login error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    
-   
-      <View style={styles.innerContainer}>
-        <Text style={styles.title}>Hi, Welcome 👋</Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      >
+        <View style={styles.innerContainer}>
+          <Text style={styles.title}>Hi, Welcome 👋</Text>
 
-     
-      
-        <Text style={styles.label}>Email</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor="#ccc"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-        />
-        
-        <Text style={styles.label}>Password</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor="#ccc"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            placeholderTextColor="#ccc"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          
+          <Text style={styles.label}>Password</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            placeholderTextColor="#ccc"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
 
-       <TouchableOpacity onPress={() => navigation.navigate("ForgotPass")}>
-                 <Text style={styles.link1}>Forgot password? </Text>
-               </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("ForgotPass")}>
+            <Text style={styles.link1}>Forgot password?</Text>
+          </TouchableOpacity>
 
-        <Button
-          mode="contained"
-          style={styles.button}
-          labelStyle={styles.buttonText}
-        
-        >
-          Log in
-        </Button>
+          <Button
+            mode="contained"
+            style={styles.button}
+            labelStyle={styles.buttonText}
+            onPress={handleLogin}
+            loading={loading}
+            disabled={loading}
+          >
+            {loading ? 'Logging in...' : 'Log in'}
+          </Button>
 
-        <TouchableOpacity onPress={() => navigation.navigate("Welcom")}>
-          <Text style={styles.link}>Don't have an account? Sign Up</Text>
-        </TouchableOpacity>
-      </View>
-  
+          <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
+            <Text style={styles.link}>Don't have an account? Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }
+
+// Keep your existing styles...
 
 const styles = StyleSheet.create({
   container: {

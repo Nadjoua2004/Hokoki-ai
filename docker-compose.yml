@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   # Backend service
   backend:
@@ -11,6 +10,8 @@ services:
       - ./backend:/app
     depends_on:
       - mongo
+    networks:
+      - hokoki-ai-network
 
   # MongoDB service
   mongo:
@@ -20,6 +21,14 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+    networks:
+      - hokoki-ai-network
 
+# Named volume for MongoDB data
 volumes:
   mongo-data:
+
+# Define a custom network
+networks:
+  hokoki-ai-network:
+    driver: bridge

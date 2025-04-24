@@ -10,6 +10,8 @@ import LawyerAcc from './pages/LawyerAcc.js';
 import ResetPass from './pages/ResetPass.js';
 import Welcom from './pages/Welcom.js';
 import ChatPage from './pages/ChatPage.js';
+import LawyerMain from './pages/LawyerMain.js';
+import { API_URL } from './config';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -25,6 +27,7 @@ export default function App() {
         <Stack.Screen name="ResetPass" component={ResetPass} />
         <Stack.Screen name="Welcom" component={Welcom} />
         <Stack.Screen name="ChatPage" component={ChatPage} />
+        <Stack.Screen name="LawyerMain" component={LawyerMain} />
       </Stack.Navigator>
     </NavigationContainer>
   );

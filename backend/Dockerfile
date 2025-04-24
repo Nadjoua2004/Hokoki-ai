@@ -4,17 +4,18 @@ FROM node:16
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . .
-
-# Install any needed dependencies
+# Copy package files first and install dependencies
+COPY package*.json ./
 RUN npm install
 
-# Make port 5000 available to the world outside this container
+# Copy the rest of the application files
+COPY . .
+
+# Expose the port the app runs on
 EXPOSE 5000
 
-# Define environment variable (optional)
+# Optional environment variable
 ENV NODE_ENV=production
 
-# Run server.js when the container launches
+# Start the server
 CMD ["node", "server.js"]

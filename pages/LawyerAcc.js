@@ -1,124 +1,113 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ToastAndroid, KeyboardAvoidingView, Platform } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ToastAndroid, KeyboardAvoidingView, Platform, ActivityIndicator } from "react-native";
 import { Button, Checkbox } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import { API_URL } from '../config';
 
-export default function SignIn() {
+export default function LawyerSignUp() {
   const navigation = useNavigation();
-const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [phonenumb, setPhonenumb] = useState("");
-  const [password, setPassword] = useState("");
-  const [id, setId] = useState("");
-  const [agree, setAgree] = useState(false); 
+  const [formData, setFormData] = useState({
+    name: "",
+    surname: "",
+    phonenumb: "",
+    idcapa: "",
+    email: "",
+    password: "",
+    agreeToTerms: false
+  });
+  const [loading, setLoading] = useState(false);
 
-  const handleSignIn = async () => {
+  const handleChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
-    if (!agree) {
-      ToastAndroid.show("You must agree to the terms before signing in!", ToastAndroid.SHORT);
+  const handleSignUp = async () => {
+    // Validate agreement
+    if (!formData.agreeToTerms) {
+      ToastAndroid.show("You must agree to the terms!", ToastAndroid.SHORT);
       return;
     }
-    console.log("Signing in...");
-     if (!name || !surname || !phonenumb || !email || !password || !id) {
-          ToastAndroid.show("All fields are required!", ToastAndroid.SHORT);
-          return;
-        }
+
+    // Validate required fields
+    const requiredFields = ['name', 'surname', 'phonenumb', 'idcapa', 'email', 'password'];
+    const missingField = requiredFields.find(field => !formData[field]?.trim());
+    
+    if (missingField) {
+      const fieldName = missingField === 'idcapa' ? 'CAPA Certificate ID' : missingField;
+      ToastAndroid.show(`Please fill in ${fieldName}`, ToastAndroid.SHORT);
+      return;
+    }
+
+    // Validate email format
+    if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      ToastAndroid.show("Please enter a valid email address", ToastAndroid.SHORT);
+      return;
+    }
+
+    setLoading(true);
+    
+    try {
+      const response = await fetch(`${API_URL}/api/lawyer/register`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Registration failed');
+      }
+
+      ToastAndroid.show('Lawyer registration successful!', ToastAndroid.SHORT);
+      navigation.navigate('Welcome');
       
-        try {
-         
-          const response = await fetch('http://192.168.43.76:5000/api/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name,
-              surname,
-              phonenumb,
-              email,
-              password,
-              id,
-              agree
-            }),
-          });
-      
-          const data = await response.json();
-      
-          // . Handle response
-          if (response.ok) {
-            ToastAndroid.show('Registration successful!', ToastAndroid.SHORT);
-            navigation.navigate('Welcom'); 
-          } else {
-            ToastAndroid.show(data.message || 'Registration failed', ToastAndroid.SHORT);
-          }
-        } catch (error) {
-          // 5. Network/other errors
-          ToastAndroid.show(`Error: ${error.message}`, ToastAndroid.SHORT);
-          console.error('Registration error:', error);
-        }
+    } catch (error) {
+      console.error('Registration error:', error);
+      ToastAndroid.show(
+        error.message || 'Registration failed. Please try again.',
+        ToastAndroid.LONG
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-   
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
+    >
       <View style={styles.innerContainer}>
-        <Text style={styles.title}>Create Lawyer account</Text>
-        
-        <TextInput
-                     style={styles.input}
-                     placeholder="Your Name"
-                     placeholderTextColor="#ccc"
-                     value={name}
-                     onChangeText={setName}
-                   />
-       
-        
+        <Text style={styles.title}>Lawyer Registration</Text>
+
+        {[
+          { field: 'name', placeholder: 'Your Name' },
+          { field: 'surname', placeholder: 'Your Surname' },
+          { field: 'phonenumb', placeholder: 'Phone Number', keyboardType: 'phone-pad' },
+          { field: 'idcapa', placeholder: 'CAPA Certificate ID' },
+          { field: 'email', placeholder: 'Email', keyboardType: 'email-address', autoCapitalize: 'none' },
+          { field: 'password', placeholder: 'Password', secureTextEntry: true }
+        ].map(({ field, placeholder, ...props }) => (
           <TextInput
-                      style={styles.input}
-                      placeholder="Your Surname"
-                      placeholderTextColor="#ccc"
-                      value={surname}
-                      onChangeText={setSurname}
-                    />
-        
-      <TextInput
-                    style={styles.input}
-                    placeholder="Your Number"
-                    placeholderTextColor="#ccc"
-                    value={phonenumb}
-                    onChangeText={setPhonenumb}
-                    keyboardType="phone-pad"
-                  />
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor="#ccc"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-        />
-        
-       
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor="#ccc"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-       
-        <TextInput
-          style={styles.input}
-          placeholder="ID of your CAPA certifecate"
-          placeholderTextColor="#ccc"
-          value={id}
-          onChangeText={setId}
-          secureTextEntry
-        />
+            key={field}
+            style={styles.input}
+            placeholder={placeholder}
+            placeholderTextColor="#ccc"
+            value={formData[field]}
+            onChangeText={(text) => handleChange(field, text)}
+            {...props}
+          />
+        ))}
 
         <View style={styles.checkboxContainer}>
           <Checkbox
-            status={agree ? "checked" : "unchecked"}
-            onPress={() => setAgree(!agree)}
+            status={formData.agreeToTerms ? "checked" : "unchecked"}
+            onPress={() => handleChange('agreeToTerms', !formData.agreeToTerms)}
             color='#003366'
           />
           <Text style={styles.checkboxText}>I agree to the Terms & Conditions</Text>
@@ -128,16 +117,23 @@ const [email, setEmail] = useState("");
           mode="contained"
           style={styles.button}
           labelStyle={styles.buttonText}
-          onPress={handleSignIn}
+          onPress={handleSignUp}
+          disabled={loading}
         >
-          Sign In
+          {loading ? 'Registering...' : 'Register'}
         </Button>
-        
-        <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
-          <Text style={styles.link}>Already have an account?  Log in</Text>
+
+        {loading && <ActivityIndicator style={styles.loader} color="#003366" />}
+
+        <TouchableOpacity 
+          onPress={() => navigation.navigate("LogIn")}
+          style={styles.loginLink}
+          disabled={loading}
+        >
+          <Text style={styles.link}>Already have an account? Log in</Text>
         </TouchableOpacity>
       </View>
-  
+    </KeyboardAvoidingView>
   );
 }
 
@@ -151,14 +147,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
-  
-  },
-  label: {
-    fontSize: 14,
-    alignSelf: 'flex-start',
-    marginLeft: 10,
-    marginBottom: 5,
-    color: 'black',
   },
   title: {
     fontSize: 30,
@@ -213,10 +201,5 @@ const styles = StyleSheet.create({
     marginTop: 80,
     color: "#003366",
     fontSize: 16,
-  },
-  link1: {
-    marginTop: 40,
-    color: "#003366",
-    fontSize: 18,
   },
 });
