@@ -1,60 +1,104 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView
-} from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
+import { io } from 'socket.io-client';
 
 const ChatScreen = () => {
-  const [messages, setMessages] = useState([
-    { text: 'Hi!', sender: 'me', time: '10:10' },
-    { text: 'Hi, how can I help ?', sender: 'other', time: '10:11' },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const socket = useRef(null);
+  const scrollViewRef = useRef(null);
+
+  // Replace these with your actual data
+  const currentUserId = '68067bfe21021710f338754d';
+  const otherUserId = '68067b1321021710f3387549';
+  const conversationId = '6806b48347f3e3b81fdb9865';
+  const API_URL = 'http://192.168.43.76:5000'; 
+
+  useEffect(() => {
+    // 1. Connect to Socket.IO
+    socket.current = io(API_URL, {
+      transports: ['websocket'],
+    });
+
+    // 2. Join conversation
+    socket.current.emit('joinConversation', conversationId);
+
+    // 3. Load message history
+    const loadMessages = async () => {
+      try {
+        const response = await fetch(
+          `${API_URL}/api/conversation/${conversationId}/messages`
+        );
+        const { messages } = await response.json();
+        setMessages(messages);
+      } catch (error) {
+        console.log('Error loading messages:', error);
+      }
+    };
+    loadMessages();
+
+    // 4. Listen for new messages
+    socket.current.on('receiveMessage', (newMessage) => {
+      setMessages(prev => [...prev, newMessage]);
+    });
+
+    return () => socket.current?.disconnect();
+  }, []);
 
   const handleSend = () => {
     if (input.trim()) {
       const newMessage = {
-        text: input,
-        sender: 'me',
-        time: new Date().toLocaleTimeString().slice(0, 5),
+        conversationId,
+        sender: currentUserId,
+        receiver: otherUserId,
+        content: input,
+        timestamp: new Date().toISOString()
       };
-      setMessages([...messages, newMessage]);
+
+      socket.current.emit('sendMessage', newMessage);
       setInput('');
     }
   };
 
+  const formatTime = (timestamp) => {
+    return new Date(timestamp).toLocaleTimeString([], { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+  };
+
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.backArrow}>{'\u2190'}</Text>
-        <View style={styles.userInfo}>
-          <Text style={styles.name}>M. Djerbi Rachid</Text>
-          <Text style={styles.status}>online</Text>
-        </View>
+        <Text style={styles.name}>M. Djerbi Rachid</Text>
+        <Text style={styles.status}>online</Text>
       </View>
 
-      {/* Messages */}
-      <ScrollView style={styles.messages}>
+      <ScrollView
+        ref={scrollViewRef}
+        style={styles.messages}
+        onContentSizeChange={() => 
+          scrollViewRef.current?.scrollToEnd({ animated: true })
+        }
+      >
         {messages.map((msg, index) => (
           <View
             key={index}
             style={[
               styles.message,
-              msg.sender === 'me' ? styles.myMessage : styles.otherMessage,
+              msg.sender === currentUserId ? styles.myMessage : styles.otherMessage,
             ]}
           >
-            <Text style={styles.messageText}>{msg.text}</Text>
-            <Text style={styles.time}>{msg.time}</Text>
+            <Text style={msg.sender === currentUserId ? styles.myMessageText : styles.otherMessageText}>
+              {msg.content}
+            </Text>
+            <Text style={styles.time}>
+              {formatTime(msg.timestamp)}
+            </Text>
           </View>
         ))}
       </ScrollView>
 
-      {/* Input */}
       <View style={styles.inputContainer}>
         <TextInput
           value={input}
@@ -71,31 +115,20 @@ const ChatScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop:20,
     flex: 1,
     backgroundColor: '#fff',
+    paddingTop: 20,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    borderBottomColor: '#eee',
+    padding: 15,
     borderBottomWidth: 1,
-    backgroundColor: '#f9f9f9',
-  },
-  backArrow: {
-    fontSize: 24,
-    marginRight: 10,
-  },
-  userInfo: {
-    flexDirection: 'column',
+    borderBottomColor: '#eee',
   },
   name: {
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 18,
   },
   status: {
-    fontSize: 12,
     color: 'green',
   },
   messages: {
@@ -106,31 +139,32 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     marginBottom: 10,
-    maxWidth: '70%',
+    maxWidth: '80%',
   },
   myMessage: {
     backgroundColor: '#007bff',
     alignSelf: 'flex-end',
-    borderBottomRightRadius: 0,
   },
   otherMessage: {
     backgroundColor: '#f1f1f1',
     alignSelf: 'flex-start',
-    borderBottomLeftRadius: 0,
   },
-  messageText: {
-    color: '#fff',
+  myMessageText: {
+    color: 'white',
+  },
+  otherMessageText: {
+    color: 'black',
   },
   time: {
-    color: '#ccc',
     fontSize: 10,
-    textAlign: 'right',
+    color: '#666',
     marginTop: 5,
+    textAlign: 'right',
   },
   inputContainer: {
     padding: 10,
-    borderTopColor: '#eee',
     borderTopWidth: 1,
+    borderTopColor: '#eee',
   },
   input: {
     backgroundColor: '#f2f2f2',

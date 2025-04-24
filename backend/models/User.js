@@ -1,3 +1,6 @@
+
+
+
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
@@ -22,10 +25,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  agreeToTerms: {
+  agree: {
     type: Boolean,
     default: false
   }
 });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema, 'users');

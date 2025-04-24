@@ -18,7 +18,7 @@ export default function BeginScreen() {
       }
       return;
     }
-    navigation.navigate("SignIn"); // ✅ الانتقال إذا وافق المستخدم
+    navigation.navigate("SignIn"); 
   };
 
   return (
@@ -44,7 +44,9 @@ export default function BeginScreen() {
           status={checked ? "checked" : "unchecked"}
           onPress={() => setChecked(!checked)}
         />
-        <Text style={styles.checkboxText}>I agree to the Terms & Conditions</Text>
+       <TouchableOpacity onPress={() => navigation.navigate("termsConditions")}>
+                     <Text style={styles.checkboxText}>I agree to the Terms & Conditions</Text>
+                   </TouchableOpacity>
       </View>
     </View>
   );
@@ -100,6 +102,8 @@ const styles = StyleSheet.create({
   checkboxContainer: {
     flexDirection: "row",
     alignItems: "center",
+    textDecorationLine: 'underline',
+
   },
   checkboxText: {
     color: "#fff",

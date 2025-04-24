@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    const socket = io("http://localhost:5000");
+ 
+// Use REAL IDs from your database
+const realConversationId = "6806b48347f3e3b81fdb9865";
+const realSenderId = "68067bfe21021710f338754d"; 
+const realReceiverId = "68067b1321021710f3387549"; // Must be different from sender
+
+socket.on("connect", () => {
+  console.log("Connected as:", socket.id);
+  
+  // Join with REAL conversation ID
+  socket.emit("joinConversation", realConversationId);
+  
+  setTimeout(() => {
+    const testMsg = {
+      conversationId: realConversationId,
+      sender: realSenderId,
+      receiver: realReceiverId,
+      content: "Hello nadjoua!"
+    };
+    socket.emit("sendMessage", testMsg);
+    console.log("Sent message:", testMsg);
+  }, 2000);
+});
+
+socket.on("receiveMessage", (msg) => {
+  console.log("Received:", msg);
+  alert("Received: " + msg.content);
+});
+  </script>
+</html>
