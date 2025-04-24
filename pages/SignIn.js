@@ -28,14 +28,20 @@ export default function SignIn() {
 
  
   const handleSignIn = async () => {
-  
+    console.log({ name, surname, phonenumb, email, password, agree });
     if (!agree) {
       ToastAndroid.show("You must agree to the terms!", ToastAndroid.SHORT);
       return;
     }
   
    
-    if (!name || !surname || !phonenumb || !email || !password) {
+    if (
+      !name.trim() ||
+      !surname.trim() ||
+      !phonenumb.trim() ||
+      !email.trim() ||
+      !password.trim()
+    )  {
       ToastAndroid.show("All fields are required!", ToastAndroid.SHORT);
       return;
     }
@@ -46,12 +52,12 @@ export default function SignIn() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name,
-          surname,
-          phonenumb,
-          email,
-          password,
-          agree
+          name: name.trim(),
+          surname: surname.trim(),
+          phonenumb: phonenumb.trim(),
+          email: email.trim(),
+          password: password.trim(),
+          agree: agree
         }),
       });
   
@@ -139,7 +145,10 @@ export default function SignIn() {
                 onPress={() => setAgree(!agree)}
                 color="#003366"
               />
+            
+              <TouchableOpacity onPress={() => navigation.navigate("termsConditions")}>
               <Text style={styles.checkboxText}>I agree to the Terms & Conditions</Text>
+            </TouchableOpacity>
             </View>
 
             <Button

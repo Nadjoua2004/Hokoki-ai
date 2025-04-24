@@ -48,7 +48,7 @@ export default function OnboardingScreen({ navigation }) {
         <Text style={styles.text}>Connect with experienced lawyers through private chat for professional legal guidance</Text>
       </View>
 
-      {/* Last Slide - Show BeginScreen Without Dots */}
+      
       <View style={styles.fullScreenSlide}>
       <BeginScreen navigation={navigation} />;
       </View>
