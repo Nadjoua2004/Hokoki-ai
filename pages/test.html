@@ -1,35 +1,55 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <title>Chat Test</title>
+</head>
+<body>
+  <h1>Chat Test</h1>
+  <div id="messages"></div>
+  <input type="text" id="messageInput" placeholder="Type a message..." />
+  <button onclick="sendMessage()">Send</button>
+
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script>
     const socket = io("http://localhost:5000");
- 
-// Use REAL IDs from your database
-const realConversationId = "6806b48347f3e3b81fdb9865";
-const realSenderId = "68067bfe21021710f338754d"; 
-const realReceiverId = "68067b1321021710f3387549"; // Must be different from sender
 
-socket.on("connect", () => {
-  console.log("Connected as:", socket.id);
-  
-  // Join with REAL conversation ID
-  socket.emit("joinConversation", realConversationId);
-  
-  setTimeout(() => {
-    const testMsg = {
-      conversationId: realConversationId,
-      sender: realSenderId,
-      receiver: realReceiverId,
-      content: "Hello nadjoua!"
-    };
-    socket.emit("sendMessage", testMsg);
-    console.log("Sent message:", testMsg);
-  }, 2000);
-});
+    // Use REAL IDs from your database
+    const realConversationId = "6806b48347f3e3b81fdb9865";
+    const userId = prompt("680a845b03f27b89ec733469");
+    const otherUserId = prompt("680a87cf03f27b89ec73347d");
 
-socket.on("receiveMessage", (msg) => {
-  console.log("Received:", msg);
-  alert("Received: " + msg.content);
-});
+    socket.on("connect", () => {
+      console.log("Connected as:", socket.id);
+
+      // Join with REAL conversation ID
+      socket.emit("joinConversation", realConversationId);
+
+      // Emit login event with user ID and role
+      socket.emit("login", { userId, role: "user" }); // Change role as needed
+    });
+
+    socket.on("receiveMessage", (msg) => {
+      console.log("Received:", msg);
+      const messagesDiv = document.getElementById("messages");
+      const messageElem = document.createElement("div");
+      messageElem.textContent = `${msg.sender === userId ? 'You' : 'Other'}: ${msg.content}`;
+      messagesDiv.appendChild(messageElem);
+    });
+
+    function sendMessage() {
+      const input = document.getElementById("messageInput");
+      const content = input.value;
+      if (content.trim()) {
+        const testMsg = {
+          conversationId: realConversationId,
+          sender: userId,
+          receiver: otherUserId,
+          content: content
+        };
+        socket.emit("sendMessage", testMsg);
+        input.value = "";
+      }
+    }
   </script>
+</body>
 </html>
