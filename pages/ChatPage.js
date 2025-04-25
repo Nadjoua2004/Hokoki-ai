@@ -2,51 +2,70 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
 import { io } from 'socket.io-client';
 
-const ChatScreen = () => {
+const ChatScreen = ({ route }) => {
+  const { otherUserId } = route.params;
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [conversationId, setConversationId] = useState(null);
   const socket = useRef(null);
   const scrollViewRef = useRef(null);
 
-  // Replace these with your actual data
-  const currentUserId = '68067bfe21021710f338754d';
-  const otherUserId = '68067b1321021710f3387549';
-  const conversationId = '6806b48347f3e3b81fdb9865';
-  const API_URL = 'http://192.168.43.76:5000'; 
+  const currentUserId = '68067bfe21021710f338754d'; // Replace with actual user ID
+  const API_URL = 'http://192.168.43.76:5000';
 
   useEffect(() => {
-    // 1. Connect to Socket.IO
-    socket.current = io(API_URL, {
-      transports: ['websocket'],
-    });
-
-    // 2. Join conversation
-    socket.current.emit('joinConversation', conversationId);
-
-    // 3. Load message history
-    const loadMessages = async () => {
+    const initiateConversation = async () => {
       try {
-        const response = await fetch(
-          `${API_URL}/api/conversation/${conversationId}/messages`
-        );
-        const { messages } = await response.json();
-        setMessages(messages);
+        const response = await fetch(`${API_URL}/api/initiateConversation`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: currentUserId, lawyerId: otherUserId })
+        });
+        const data = await response.json();
+        setConversationId(data.conversationId);
       } catch (error) {
-        console.log('Error loading messages:', error);
+        console.error('Error initiating conversation:', error);
       }
     };
-    loadMessages();
 
-    // 4. Listen for new messages
-    socket.current.on('receiveMessage', (newMessage) => {
-      setMessages(prev => [...prev, newMessage]);
-    });
+    initiateConversation();
+  }, [otherUserId]);
 
-    return () => socket.current?.disconnect();
-  }, []);
+  useEffect(() => {
+    if (conversationId) {
+      // 1. Connect to Socket.IO
+      socket.current = io(API_URL, {
+        transports: ['websocket'],
+      });
+
+      // 2. Join conversation
+      socket.current.emit('joinConversation', conversationId);
+
+      // 3. Load message history
+      const loadMessages = async () => {
+        try {
+          const response = await fetch(
+            `${API_URL}/api/conversation/${conversationId}/messages`
+          );
+          const { messages } = await response.json();
+          setMessages(messages);
+        } catch (error) {
+          console.log('Error loading messages:', error);
+        }
+      };
+      loadMessages();
+
+      // 4. Listen for new messages
+      socket.current.on('receiveMessage', (newMessage) => {
+        setMessages(prev => [...prev, newMessage]);
+      });
+
+      return () => socket.current?.disconnect();
+    }
+  }, [conversationId]);
 
   const handleSend = () => {
-    if (input.trim()) {
+    if (input.trim() && conversationId) {
       const newMessage = {
         conversationId,
         sender: currentUserId,
@@ -61,23 +80,27 @@ const ChatScreen = () => {
   };
 
   const formatTime = (timestamp) => {
-    return new Date(timestamp).toLocaleTimeString([], { 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    return new Date(timestamp).toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit'
     });
   };
+
+  if (!conversationId) {
+    return <Text>Initiating conversation...</Text>;
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.name}>M. Djerbi Rachid</Text>
-        <Text style={styles.status}>online</Text>
+       
       </View>
 
       <ScrollView
         ref={scrollViewRef}
         style={styles.messages}
-        onContentSizeChange={() => 
+        onContentSizeChange={() =>
           scrollViewRef.current?.scrollToEnd({ animated: true })
         }
       >

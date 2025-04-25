@@ -22,32 +22,20 @@ export default function SignIn() {
   const [surname, setSurname] = useState("");
   const [phonenumb, setPhonenumb] = useState("");
   const [password, setPassword] = useState("");
-  const [agree, setAgree] = useState(false); 
- // 1. Very very impoetent don't mess with it pls (handleSignIn function)
+  const [agree, setAgree] = useState(false);
 
-
- 
   const handleSignIn = async () => {
-    console.log({ name, surname, phonenumb, email, password, agree });
     if (!agree) {
       ToastAndroid.show("You must agree to the terms!", ToastAndroid.SHORT);
       return;
     }
-  
-   
-    if (
-      !name.trim() ||
-      !surname.trim() ||
-      !phonenumb.trim() ||
-      !email.trim() ||
-      !password.trim()
-    )  {
+
+    if (!name.trim() || !surname.trim() || !phonenumb.trim() || !email.trim() || !password.trim()) {
       ToastAndroid.show("All fields are required!", ToastAndroid.SHORT);
       return;
     }
-  
+
     try {
-     
       const response = await fetch('http://192.168.43.76:5000/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -57,28 +45,26 @@ export default function SignIn() {
           phonenumb: phonenumb.trim(),
           email: email.trim(),
           password: password.trim(),
-          agree: agree
+          agree
         }),
       });
-  
+
       const data = await response.json();
-  
-      // . Handle response
+
       if (response.ok) {
         ToastAndroid.show('Registration successful!', ToastAndroid.SHORT);
-        navigation.navigate('ChatPage'); 
+        // Navigate to ChatScreen with a dummy lawyer ID for testing
+        navigation.navigate('ChatPage', {
+          otherUserId: '68067b1321021710f3387549' // Replace with actual lawyer ID
+        });
       } else {
         ToastAndroid.show(data.message || 'Registration failed', ToastAndroid.SHORT);
       }
     } catch (error) {
-      // 5. Network/other errors
       ToastAndroid.show(`Error: ${error.message}`, ToastAndroid.SHORT);
       console.error('Registration error:', error);
     }
   };
-
-
-
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -91,7 +77,6 @@ export default function SignIn() {
           <View style={styles.innerContainer}>
             <Text style={styles.title}>Create account</Text>
 
-            
             <TextInput
               style={styles.input}
               placeholder="Your Name"
@@ -100,7 +85,6 @@ export default function SignIn() {
               onChangeText={setName}
             />
 
-           
             <TextInput
               style={styles.input}
               placeholder="Your Surname"
@@ -109,7 +93,6 @@ export default function SignIn() {
               onChangeText={setSurname}
             />
 
-            
             <TextInput
               style={styles.input}
               placeholder="Your Number"
@@ -119,7 +102,6 @@ export default function SignIn() {
               keyboardType="phone-pad"
             />
 
-           
             <TextInput
               style={styles.input}
               placeholder="Email"
@@ -129,7 +111,6 @@ export default function SignIn() {
               keyboardType="email-address"
             />
 
-          
             <TextInput
               style={styles.input}
               placeholder="Password"
@@ -145,10 +126,9 @@ export default function SignIn() {
                 onPress={() => setAgree(!agree)}
                 color="#003366"
               />
-            
               <TouchableOpacity onPress={() => navigation.navigate("termsConditions")}>
-              <Text style={styles.checkboxText}>I agree to the Terms & Conditions</Text>
-            </TouchableOpacity>
+                <Text style={styles.checkboxText}>I agree to the Terms & Conditions</Text>
+              </TouchableOpacity>
             </View>
 
             <Button
@@ -166,7 +146,7 @@ export default function SignIn() {
             <TouchableOpacity onPress={() => navigation.navigate("LogIn")}>
               <Text style={styles.link}>Already have an account? Log in</Text>
             </TouchableOpacity>
-          </View>   
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
@@ -179,7 +159,6 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     justifyContent: "center",
     backgroundColor: "#F6F9FF",
-  
   },
   innerContainer: {
     alignItems: "center",

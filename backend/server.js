@@ -10,6 +10,7 @@ const socketIo = require('socket.io');
 const User = require('./models/User');
 const Lawyer = require('./models/Lawyer');
 const Message = require('./models/Message');
+const Conversation = require('./models/Conversation'); // Import the Conversation model
 
 const app = express();
 
@@ -179,13 +180,26 @@ app.post('/api/lawyer/login', async (req, res) => {
 // ========================
 // CONVERSATION & MESSAGES
 // ========================
-app.post('/api/conversation', async (req, res) => {
+app.post('/api/initiateConversation', async (req, res) => {
   try {
     const { userId, lawyerId } = req.body;
-    const conversationId = new mongoose.Types.ObjectId();
-    res.status(201).json({ success: true, conversationId, message: 'Conversation created successfully' });
+    if (!userId || !lawyerId) {
+      return res.status(400).json({ message: 'User ID and Lawyer ID are required!' });
+    }
+
+    // Create a new conversation
+    const conversation = new Conversation({
+      participants: [userId, lawyerId]
+    });
+    await conversation.save();
+
+    res.status(201).json({
+      message: 'Conversation initiated successfully!',
+      conversationId: conversation._id
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error creating conversation' });
+    console.error('Error initiating conversation:', error);
+    res.status(500).json({ message: 'Server error during conversation initiation' });
   }
 });
 
