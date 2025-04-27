@@ -14,12 +14,10 @@ const Conversation = require('./models/Conversation'); // Import the Conversatio
 
 const app = express();
 app.use((req, res, next) => {
-  console.log(`Incoming request: ${req.method} ${req.url}`);
+  console.log(`[DEBUG] Incoming request: ${req.method} ${req.url}`);
   next();
 });
-// app.get('/api/test', (req, res) => {
-//   res.json({ message: "Test route works!" });
-// });
+
 // Middleware
 app.use(cors({
   origin: ['http://localhost:19006', 'http://192.168.43.76:19006']
@@ -34,56 +32,50 @@ mongoose.connect('mongodb://127.0.0.1:27017/mydb')
 // Create HTTP server & Socket.IO
 const server = http.createServer(app);
 const io = socketIo(server, {
-  cors: { origin: '*', methods: ['GET','POST'] }
+  cors: { origin: '*', methods: ['GET', 'POST'] }
 });
 
 // In‑memory map of connected users
-// key: socket.id, value: { userId, role }
 const activeUsers = new Map();
 
 io.on('connection', (socket) => {
-  console.log('New client connected:', socket.id);
+  console.log('[DEBUG] New client connected:', socket.id);
 
-  // 1) Capture login with role
   socket.on('login', ({ userId, role }) => {
     activeUsers.set(socket.id, { userId, role });
-    console.log(`Socket ${socket.id} logged in as ${role} ${userId}`);
+    console.log(`[DEBUG] Socket ${socket.id} logged in as ${role} ${userId}`);
   });
 
-  // 2) Join conversation only if logged in
   socket.on('joinConversation', (conversationId) => {
     const user = activeUsers.get(socket.id);
     if (!user) {
-      console.warn(`Socket ${socket.id} tried to join without logging in`);
+      console.warn(`[WARN] Socket ${socket.id} tried to join without logging in`);
       return;
     }
     socket.join(conversationId);
-    console.log(`${user.role} ${user.userId} joined conversation ${conversationId}`);
+    console.log(`[DEBUG] ${user.role} ${user.userId} joined conversation ${conversationId}`);
   });
 
-  // 3) Handle new messages
   socket.on('sendMessage', async (messageData) => {
     try {
       const newMessage = new Message(messageData);
       await newMessage.save();
-
-      // Broadcast to room
       socket.to(messageData.conversationId).emit('receiveMessage', newMessage);
       socket.emit('receiveMessage', newMessage);
     } catch (error) {
-      console.error('Error saving message:', error);
+      console.error('[ERROR] Saving message:', error);
     }
   });
 
-  // 4) Cleanup on disconnect
   socket.on('disconnect', () => {
     activeUsers.delete(socket.id);
-    console.log('Client disconnected:', socket.id);
+    console.log('[DEBUG] Client disconnected:', socket.id);
   });
 });
 
 // Test route
 app.get('/', (req, res) => {
+  console.log('[DEBUG] Sending response for root endpoint');
   res.send('Backend is running!');
 });
 
@@ -93,21 +85,26 @@ app.get('/', (req, res) => {
 app.post('/api/register', async (req, res) => {
   try {
     const { name, surname, phonenumb, email, password, agree } = req.body;
+    console.log('[DEBUG] Registering new user:', { name, surname, phonenumb, email });
+
     if (!name || !surname || !phonenumb || !email || !password || !agree) {
       return res.status(400).json({ message: 'All fields are required!' });
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({ name, surname, phonenumb, email, password: hashedPassword, agreeToTerms: agree });
     await user.save();
+
+    console.log('[DEBUG] User registered successfully:', user._id);
     res.status(201).json({
       message: 'User registered successfully!',
       user: { id: user._id, name: user.name, email: user.email }
     });
   } catch (error) {
+    console.error('[ERROR] Registering user:', error);
     if (error.code === 11000) {
       res.status(400).json({ message: 'Email already exists!' });
     } else {
-      console.error('Registration error:', error);
       res.status(500).json({ message: 'Server error during registration' });
     }
   }
@@ -116,10 +113,15 @@ app.post('/api/register', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log('[DEBUG] Logging in user:', email);
+
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: "User not found!" });
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials!" });
+
+    console.log('[DEBUG] User login successful:', user._id);
     res.json({
       message: "Login successful!",
       user: { id: user._id, name: user.name, email: user.email }
@@ -129,22 +131,28 @@ app.post('/api/login', async (req, res) => {
     res.status(500).json({ message: "Server error during login" });
   }
 });
+
 app.get('/api/user/:id', async (req, res) => {
   try {
+    console.log('[DEBUG] Fetching user by ID:', req.params.id);
     const user = await User.findById(req.params.id).select('-password');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
     res.json(user);
   } catch (error) {
+    console.error('[ERROR] Fetching user by ID:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 app.get('/api/users', async (req, res) => {
   try {
+    console.log('[DEBUG] Fetching all users');
     const users = await User.find({}, '-password -__v');
     res.json({ success: true, users });
   } catch (err) {
+    console.error('[ERROR] Fetching users:', err);
     res.status(500).json({ success: false, message: err.message });
   }
 });
@@ -155,22 +163,27 @@ app.get('/api/users', async (req, res) => {
 app.post('/api/lawyer/register', async (req, res) => {
   try {
     const { name, surname, phonenumb, idc, email, password, agree } = req.body;
+    console.log('[DEBUG] Registering new lawyer:', { name, surname, phonenumb, idc, email });
+
     if (!name || !surname || !phonenumb || !idc || !email || !password || !agree) {
       return res.status(400).json({ message: 'All fields are required!' });
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const lawyer = new Lawyer({ name, surname, phonenumb, idc, email, password: hashedPassword, agreeToTerms: agree });
     await lawyer.save();
+
+    console.log('[DEBUG] Lawyer registered successfully:', lawyer._id);
     res.status(201).json({
       message: 'Lawyer registered successfully!',
       lawyer: { id: lawyer._id, name: lawyer.name, email: lawyer.email }
     });
   } catch (error) {
+    console.error('[ERROR] Registering lawyer:', error);
     if (error.code === 11000) {
       const dup = error.message.includes('email') ? 'Email' : 'ID';
       res.status(400).json({ message: `${dup} already registered!` });
     } else {
-      console.error('Lawyer registration error:', error);
       res.status(500).json({ message: 'Server error during registration' });
     }
   }
@@ -179,10 +192,15 @@ app.post('/api/lawyer/register', async (req, res) => {
 app.post('/api/lawyer/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log('[DEBUG] Logging in lawyer:', email);
+
     const lawyer = await Lawyer.findOne({ email });
     if (!lawyer) return res.status(404).json({ message: "Lawyer not found!" });
+
     const isMatch = await bcrypt.compare(password, lawyer.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials!" });
+
+    console.log('[DEBUG] Lawyer login successful:', lawyer._id);
     res.json({
       message: "Lawyer login successful!",
       lawyer: { id: lawyer._id, name: lawyer.name, email: lawyer.email }
@@ -193,45 +211,81 @@ app.post('/api/lawyer/login', async (req, res) => {
   }
 });
 
+app.get('/api/lawyers', async (req, res) => {
+  try {
+    console.log('[DEBUG] Fetching lawyers from database...');
+    const lawyers = await Lawyer.find({}, '-password -__v');
+    console.log('[DEBUG] Lawyers fetched:', lawyers.length);
+
+    const processedLawyers = lawyers.map(lawyer => ({
+      id: lawyer._id,
+      name: lawyer.name,
+      surname: lawyer.surname,
+      photo: lawyer.photo || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+      experienceYears: lawyer.experienceYears || 0,
+      wilaya: lawyer.wilaya || 'Not specified',
+      rating: lawyer.rating || 0
+    }));
+
+    console.log('[DEBUG] Sending response with lawyers data...');
+    res.json({
+      success: true,
+      count: processedLawyers.length,
+      lawyers: processedLawyers
+    });
+  } catch (error) {
+    console.error('[ERROR] Fetching lawyers:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch lawyers'
+    });
+  }
+});
+
 // ========================
 // CONVERSATION & MESSAGES
 // ========================
 app.post('/api/initiateConversation', async (req, res) => {
   try {
     const { userId, lawyerId } = req.body;
+    console.log('[DEBUG] Initiating conversation between:', { userId, lawyerId });
+
     if (!userId || !lawyerId) {
       return res.status(400).json({ message: 'User ID and Lawyer ID are required!' });
     }
 
-    // Create a new conversation
     const conversation = new Conversation({
       participants: [userId, lawyerId]
     });
     await conversation.save();
 
+    console.log('[DEBUG] Conversation initiated successfully:', conversation._id);
     res.status(201).json({
       message: 'Conversation initiated successfully!',
       conversationId: conversation._id
     });
   } catch (error) {
-    console.error('Error initiating conversation:', error);
+    console.error('[ERROR] Initiating conversation:', error);
     res.status(500).json({ message: 'Server error during conversation initiation' });
   }
 });
 
 app.get('/api/conversation/:conversationId/messages', async (req, res) => {
   try {
+    console.log('[DEBUG] Fetching messages for conversation:', req.params.conversationId);
     const messages = await Message.find({ conversationId: req.params.conversationId })
                                   .sort('timestamp')
                                   .populate('sender receiver');
     res.json({ success: true, messages });
   } catch (error) {
+    console.error('[ERROR] Fetching messages:', error);
     res.status(500).json({ success: false, message: 'Error fetching messages' });
   }
 });
 
 app.get('/api/user/:userId/conversations', async (req, res) => {
   try {
+    console.log('[DEBUG] Fetching conversations for user:', req.params.userId);
     const conversations = await Message.aggregate([
       { $match: {
           $or: [
@@ -248,6 +302,7 @@ app.get('/api/user/:userId/conversations', async (req, res) => {
     ]);
     res.json({ success: true, conversations });
   } catch (error) {
+    console.error('[ERROR] Fetching conversations:', error);
     res.status(500).json({ success: false, message: 'Error fetching conversations' });
   }
 });
@@ -255,6 +310,6 @@ app.get('/api/user/:userId/conversations', async (req, res) => {
 // START SERVER
 const PORT = 5000;
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log('WebSocket server ready');
+  console.log(`[DEBUG] Server running on port ${PORT}`);
+  console.log('[DEBUG] WebSocket server ready');
 });

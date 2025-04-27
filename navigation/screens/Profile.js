@@ -1,7 +1,7 @@
 import React , {  useEffect,useState } from 'react';
 import { View, Text, Image, ActivityIndicator ,TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
-import { CaretRight,CaretLeft ,Gear, SignOut, Bell} from 'phosphor-react-native';
+import { CaretRight,MagicWand,CaretLeft ,Gear, SignOut, Bell} from 'phosphor-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 const ProfileScreen = () => {
@@ -65,8 +65,8 @@ const ProfileScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <MaterialIcons name="privacy-tip" size={24} color="#003366" />
-          <Text style={styles.menuText}>Privacy Policy</Text>
+        <MagicWand size={24} color="#003366" />
+          <Text style={styles.menuText}>Level Up Your Profile </Text>
           <CaretRight size={24} color="#003366" />
         </TouchableOpacity>
 

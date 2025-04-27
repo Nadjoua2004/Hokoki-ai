@@ -7,8 +7,10 @@ import SignIn from './pages/SignIn.js';
 import LogIn from './pages/LogIn.js';
 import ForgotPass from './pages/ForgotPass.js';
 import LawyerAcc from './pages/LawyerAcc.js';
+import ChatPage from './pages/ChatPage.js';
 import ResetPass from './pages/ResetPass.js';
 import Welcom from './pages/Welcom.js';
+import LawyerProfile from './pages/LawyerProfile.js';
 import MainContainer from './navigation/MainContainer'; 
 import ChatBot  from './navigation/screens/ChatBot.js'; 
 import Documments from './navigation/screens/Documments.js'; 
@@ -33,8 +35,8 @@ export default function App() {
         <Stack.Screen name="ChatBot" component={ChatBot} />
         <Stack.Screen name="LawyerMain" component={LawyerMain} />
         <Stack.Screen name="Profile" component={Profile} />
-        
-        
+        <Stack.Screen name="ChatPage" component={ChatPage} />
+        <Stack.Screen name="LawyerProfile" component={LawyerProfile} />
          {/* Navigate to MainTabs after login */}
       </Stack.Navigator>
     </NavigationContainer>
