@@ -54,7 +54,7 @@ export default function SignIn() {
       if (response.ok) {
         ToastAndroid.show('Registration successful!', ToastAndroid.SHORT);
         // Navigate to ChatScreen with a dummy lawyer ID for testing
-        navigation.navigate('ChatPage', {
+        navigation.navigate('MainContainer', {
           otherUserId: '68067b1321021710f3387549' // Replace with actual lawyer ID
         });
       } else {

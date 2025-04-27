@@ -60,7 +60,7 @@ export default function LogIn() {
         }
   
         if (response.ok) {
-          navigation.navigate('ChatPage');
+          navigation.navigate('MainContainer');
           ToastAndroid.show('Login successful!', ToastAndroid.SHORT);
           return; // Exit on success
         } else {

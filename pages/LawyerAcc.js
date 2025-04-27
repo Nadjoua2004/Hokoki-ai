@@ -56,7 +56,7 @@ export default function SignIn() {
       if (response.ok) {
         ToastAndroid.show('Registration successful!', ToastAndroid.SHORT);
         // Navigate to ChatScreen with a dummy user ID for testing
-        navigation.navigate('ChatScreen', {
+        navigation.navigate('MainContainer', {
           otherUserId: '680a84a003f27b89ec733472' // Replace with actual user ID
         });
       } else {

@@ -3,14 +3,17 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import WelcomeScreen from './screens/welcomeScreen.js';
 import OnboardingScreen from './screens/OnboardingScreen.js';
-import SignIn  from './pages/SignIn.js';
-import LogIn from './pages/LogIn.js'; 
+import SignIn from './pages/SignIn.js';
+import LogIn from './pages/LogIn.js';
 import ForgotPass from './pages/ForgotPass.js';
 import LawyerAcc from './pages/LawyerAcc.js';
 import ResetPass from './pages/ResetPass.js';
 import Welcom from './pages/Welcom.js';
-import ChatPage from './pages/ChatPage.js';
-import termsConditions from './pages/termsConditions.js';
+import MainContainer from './navigation/MainContainer'; 
+import ChatBot  from './navigation/screens/ChatBot.js'; 
+import Documments from './navigation/screens/Documments.js'; 
+import LawyerMain from './navigation/screens/LawyerMain.js'; 
+import Profile from './navigation/screens/Profile.js'; 
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -25,8 +28,14 @@ export default function App() {
         <Stack.Screen name="LawyerAcc" component={LawyerAcc} />
         <Stack.Screen name="ResetPass" component={ResetPass} />
         <Stack.Screen name="Welcom" component={Welcom} />
-        <Stack.Screen name="ChatPage" component={ChatPage} />
-        <Stack.Screen name="termsConditions" component={termsConditions} />
+        <Stack.Screen name="MainContainer" component={MainContainer} />
+        <Stack.Screen name="Docummentsr" component={Documments} />
+        <Stack.Screen name="ChatBot" component={ChatBot} />
+        <Stack.Screen name="LawyerMain" component={LawyerMain} />
+        <Stack.Screen name="Profile" component={Profile} />
+        
+        
+         {/* Navigate to MainTabs after login */}
       </Stack.Navigator>
     </NavigationContainer>
   );

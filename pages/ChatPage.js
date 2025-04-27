@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
 import { io } from 'socket.io-client';
 
-const ChatScreen = ({ route }) => {
+const ChatPage = ({ route }) => {
   const { otherUserId } = route.params;
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -10,7 +10,7 @@ const ChatScreen = ({ route }) => {
   const socket = useRef(null);
   const scrollViewRef = useRef(null);
 
-  const currentUserId = '68067bfe21021710f338754d'; // Replace with actual user ID
+  const currentUserId = '680a845b03f27b89ec733469'; // Replace with actual user ID
   const API_URL = 'http://192.168.43.76:5000';
 
   useEffect(() => {
@@ -33,15 +33,12 @@ const ChatScreen = ({ route }) => {
 
   useEffect(() => {
     if (conversationId) {
-      // 1. Connect to Socket.IO
       socket.current = io(API_URL, {
         transports: ['websocket'],
       });
 
-      // 2. Join conversation
       socket.current.emit('joinConversation', conversationId);
 
-      // 3. Load message history
       const loadMessages = async () => {
         try {
           const response = await fetch(
@@ -55,7 +52,6 @@ const ChatScreen = ({ route }) => {
       };
       loadMessages();
 
-      // 4. Listen for new messages
       socket.current.on('receiveMessage', (newMessage) => {
         setMessages(prev => [...prev, newMessage]);
       });
@@ -92,11 +88,6 @@ const ChatScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.name}>M. Djerbi Rachid</Text>
-       
-      </View>
-
       <ScrollView
         ref={scrollViewRef}
         style={styles.messages}
@@ -142,18 +133,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingTop: 20,
   },
-  header: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  name: {
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  status: {
-    color: 'green',
-  },
   messages: {
     flex: 1,
     padding: 10,
@@ -196,4 +175,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChatScreen;
+export default ChatPage;
