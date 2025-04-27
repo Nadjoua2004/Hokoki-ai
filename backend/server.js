@@ -13,7 +13,13 @@ const Message = require('./models/Message');
 const Conversation = require('./models/Conversation'); // Import the Conversation model
 
 const app = express();
-
+app.use((req, res, next) => {
+  console.log(`Incoming request: ${req.method} ${req.url}`);
+  next();
+});
+// app.get('/api/test', (req, res) => {
+//   res.json({ message: "Test route works!" });
+// });
 // Middleware
 app.use(cors({
   origin: ['http://localhost:19006', 'http://192.168.43.76:19006']
@@ -123,7 +129,17 @@ app.post('/api/login', async (req, res) => {
     res.status(500).json({ message: "Server error during login" });
   }
 });
-
+app.get('/api/user/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 app.get('/api/users', async (req, res) => {
   try {
     const users = await User.find({}, '-password -__v');
