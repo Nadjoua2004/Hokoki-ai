@@ -7,6 +7,9 @@ const LawyerSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   idc: { type: String, required: true, unique: true }, // Lawyer ID
   password: { type: String, required: true },
-  agreeToTerms: { type: Boolean, default: false }
+  agreeToTerms: { type: Boolean, default: false },
+  photo: String,
+  experienceYears: Number,
+  wilaya: String,
 });
 module.exports = mongoose.model('Lawyer', LawyerSchema, 'lawyers');

@@ -1,19 +1,21 @@
 import React, { useState } from "react";
+import { Eye, EyeSlash } from 'phosphor-react-native';
 import {
   View,
   Text,
-  TextInput,
+  TextInput as RNTextInput,
   TouchableOpacity,
   StyleSheet,
   ToastAndroid,
   KeyboardAvoidingView,
   Platform,
+  Image,
   ScrollView,
   Keyboard,
   TouchableWithoutFeedback
 } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button, Checkbox } from "react-native-paper";
+import { Button, Checkbox, TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
 export default function SignIn() {
@@ -23,6 +25,7 @@ export default function SignIn() {
   const [surname, setSurname] = useState("");
   const [phonenumb, setPhonenumb] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [agree, setAgree] = useState(false);
 
   const handleSignIn = async () => {
@@ -54,10 +57,9 @@ export default function SignIn() {
 
       if (response.ok) {
         ToastAndroid.show('Registration successful!', ToastAndroid.SHORT);
-        // Navigate to ChatScreen with a dummy lawyer ID for testing
         await AsyncStorage.setItem('userId', data.user.id);
         navigation.navigate('MainContainer', {
-          otherUserId: '68067b1321021710f3387549' // Replace with actual lawyer ID
+          otherUserId: '68067b1321021710f3387549'
         });
       } else {
         ToastAndroid.show(data.message || 'Registration failed', ToastAndroid.SHORT);
@@ -75,11 +77,15 @@ export default function SignIn() {
         style={{ flex: 1 }}
         keyboardVerticalOffset={60}
       >
-        <ScrollView contentContainerStyle={[styles.innerContainer, ]}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <Image 
+            source={require('../assets/Star.png')} 
+            style={[styles.logo, { tintColor: '#003366' }]} 
+          />
           <View style={styles.innerContainer}>
             <Text style={styles.title}>Create account</Text>
 
-            <TextInput
+            <RNTextInput
               style={styles.input}
               placeholder="Your Name"
               placeholderTextColor="#ccc"
@@ -87,7 +93,7 @@ export default function SignIn() {
               onChangeText={setName}
             />
 
-            <TextInput
+            <RNTextInput
               style={styles.input}
               placeholder="Your Surname"
               placeholderTextColor="#ccc"
@@ -95,7 +101,7 @@ export default function SignIn() {
               onChangeText={setSurname}
             />
 
-            <TextInput
+            <RNTextInput
               style={styles.input}
               placeholder="Your Number"
               placeholderTextColor="#ccc"
@@ -104,7 +110,7 @@ export default function SignIn() {
               keyboardType="phone-pad"
             />
 
-            <TextInput
+            <RNTextInput
               style={styles.input}
               placeholder="Email"
               placeholderTextColor="#ccc"
@@ -113,14 +119,29 @@ export default function SignIn() {
               keyboardType="email-address"
             />
 
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              placeholderTextColor="#ccc"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-            />
+<TextInput
+  mode="flat" 
+  style={[styles.input, { backgroundColor: '#fff' }]}
+  placeholder="Password"
+  secureTextEntry={!passwordVisible}
+  right={
+    <TextInput.Icon
+      icon={passwordVisible ? () => <EyeSlash size={20} color="#003366" /> : () => <Eye size={20} color="#003366" />}
+      onPress={() => setPasswordVisible(!passwordVisible)}
+    />
+  }
+  placeholderTextColor="#ccc"
+  value={password}
+  onChangeText={setPassword}
+  theme={{ 
+    colors: { 
+      text: '#003366',
+      background: 'transparent' 
+    } 
+  }}
+  underlineColor="transparent" 
+  activeUnderlineColor="transparent" 
+/>
 
             <View style={styles.checkboxContainer}>
               <Checkbox
@@ -154,6 +175,7 @@ export default function SignIn() {
     </TouchableWithoutFeedback>
   );
 }
+
 
 const styles = StyleSheet.create({
   scrollContainer: {
@@ -203,6 +225,14 @@ const styles = StyleSheet.create({
   checkboxText: {
     color: "#003366",
     fontSize: 14,
+  },
+  logo: {
+    width: 28,
+    height: 28,
+    marginLeft: 290,
+    marginBottom: 10,
+    color: "#003366",
+    marginTop: 40,
   },
   button: {
     backgroundColor: "#003366",

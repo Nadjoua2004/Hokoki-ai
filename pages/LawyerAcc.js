@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   View,
   Text,
+  Image ,
   TextInput,
   TouchableOpacity,
   StyleSheet,
@@ -77,6 +78,10 @@ export default function SignIn() {
       >
         <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 50, paddingTop: 30 }}
           keyboardShouldPersistTaps="handled">
+            <Image 
+              source={require('../assets/Star.png')} 
+              style={[styles.logo, { tintColor: '#003366' }]} 
+            />
           <View style={styles.innerContainer}>
             <Text style={styles.title}>Create Lawyer account</Text>
 
@@ -182,6 +187,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#003366",
     marginBottom: 20,
+  },
+  logo: {
+    width: 28,
+    height: 28,
+    marginLeft: 279,
+    marginBottom: 18,
+    color: "#003366",
+    marginTop: 20,
   },
   input: {
     width: 300,
