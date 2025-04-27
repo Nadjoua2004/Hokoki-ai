@@ -12,6 +12,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button, Checkbox } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
@@ -54,6 +55,7 @@ export default function SignIn() {
       if (response.ok) {
         ToastAndroid.show('Registration successful!', ToastAndroid.SHORT);
         // Navigate to ChatScreen with a dummy lawyer ID for testing
+        await AsyncStorage.setItem('userId', data.user.id);
         navigation.navigate('MainContainer', {
           otherUserId: '68067b1321021710f3387549' // Replace with actual lawyer ID
         });

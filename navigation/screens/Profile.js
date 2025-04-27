@@ -1,41 +1,45 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React , {  useEffect,useState } from 'react';
+import { View, Text, Image, ActivityIndicator ,TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { CaretRight,CaretLeft ,Gear, SignOut, Bell} from 'phosphor-react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from "@react-navigation/native";
 const ProfileScreen = () => {
-  // const [user, setUser] = useState(null);
-  // const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+   const navigation = useNavigation();
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userId = await AsyncStorage.getItem('userId');
+        const response = await fetch(`http://192.168.43.76:5000/api/user/${userId}`);
+        const data = await response.json();
+        setUser(data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const userId = await AsyncStorage.getItem('userId');
-  //       const response = await fetch(`http://192.168.43.76:5000/api/user/${userId}`);
-  //       const data = await response.json();
-  //       setUser(data);
-  //     } catch (error) {
-  //       console.error('Error fetching user data:', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+    fetchUserData();
+  }, []);
 
-  //   fetchUserData();
-  // }, []);
+  if (loading) {
+    return <ActivityIndicator size="large" color="#003366" />;
+  }
 
-  // if (loading) {
-  //   return <ActivityIndicator size="large" color="#003366" />;
-  // }
-
-  // if (!user) {
-  //   return <Text>No user data available</Text>;
-  // }
+  if (!user) {
+    return <Text>No user data available</Text>;
+  }
   return (
     
     <View style={styles.container}>
         <View style={styles.iconTextContainer}>
-        <CaretLeft size={32} color="#003366" weight="bold" marginTop='28'/> {/* Change color here */}
+        <TouchableOpacity  onPress={() => navigation.navigate("ChatBot")}>
+          <CaretLeft  size={32} color="#003366" weight="bold" marginTop='28'/>
+           </TouchableOpacity>
+        
         <Text style={styles.profileTitle}>Profile</Text>
       </View>
       <View style={styles.profileHeader}>
@@ -47,9 +51,9 @@ const ProfileScreen = () => {
             style={styles.profileImage}
           />
         </View>
-        <Text style={styles.profileName}>Robi</Text>
-        <Text style={styles.profileContact}>8967452743</Text>
-        <Text style={styles.profileEmail}>robi123@gmail.com</Text>
+        <Text style={styles.profileName}>{user.name}</Text>
+      <Text style={styles.profileContact}>{user.phonenumb}</Text>
+      <Text style={styles.profileEmail}>{user.email}</Text>
       </View>
 
       <View style={styles.menuContainer}>
