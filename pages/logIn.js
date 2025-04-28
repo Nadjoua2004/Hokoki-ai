@@ -12,6 +12,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 //import { API_URL } from '../config';
@@ -30,8 +31,8 @@ export default function LogIn() {
   
     // Define your primary and fallback URLs
     const urls = [
-      'http://192.168.43.76:5000/api/Login',  // Primary URL
-      'http://192.168.43.76:5000/api/lawyer/Login'    // Fallback URL
+      'http://192.168.43.76:5000/api/login',  // Primary URL for users
+      'http://192.168.43.76:5000/api/lawyer/login'    // Fallback URL for lawyers
     ];
   
     let lastError = null;
@@ -40,7 +41,7 @@ export default function LogIn() {
       try {
         setLoading(true);
         console.log(`Trying endpoint: ${url}`);
-        
+  
         const response = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -49,8 +50,10 @@ export default function LogIn() {
   
         // Handle response (text first, then JSON)
         const responseText = await response.text();
+        console.log(`Response from ${url}:`, responseText); // Log the response for debugging
+  
         let data;
-        
+  
         try {
           data = JSON.parse(responseText);
         } catch (e) {
@@ -60,6 +63,18 @@ export default function LogIn() {
         }
   
         if (response.ok) {
+          // Store userType and userId in AsyncStorage
+          const userType = data.user ? 'user' : 'lawyer';
+          const userId = data.user ? data.user.id : data.lawyer.id;
+  
+          await AsyncStorage.setItem('userType', userType);
+          await AsyncStorage.setItem('userId', userId.toString());
+  
+          // Store lawyerId if the user is a lawyer
+          if (userType === 'lawyer') {
+            await AsyncStorage.setItem('lawyerId', userId.toString());
+          }
+  
           navigation.navigate('MainContainer');
           ToastAndroid.show('Login successful!', ToastAndroid.SHORT);
           return; // Exit on success
@@ -76,11 +91,11 @@ export default function LogIn() {
   
     // If we get here, all URLs failed
     ToastAndroid.show(
-      lastError || 'All connection attempts failed', 
+      lastError || 'All connection attempts failed',
       ToastAndroid.LONG
     );
   };
-
+  
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView

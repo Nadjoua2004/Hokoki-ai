@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, ActivityIndicator, StyleSheet, ToastAndroid } from 'react-native';
+
+import { View, Text, FlatList, ActivityIndicator,TouchableOpacity, StyleSheet, ToastAndroid } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   acceptButton: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#003366',
     padding: 10,
     borderRadius: 5,
     marginRight: 10,
