@@ -278,13 +278,15 @@ app.get('/api/lawyer/:id', async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ 
+    console.error('[ERROR] Fetching lawyer profile:', error);
+    res.status(500).json({
       success: false,
       message: 'Failed to fetch lawyer profile',
-      error: error.message 
+      error: error.message
     });
   }
 });
+
 // ========================
 // CONVERSATION & MESSAGES
 // ========================
