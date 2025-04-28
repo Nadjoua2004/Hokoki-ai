@@ -58,7 +58,7 @@ const ProfileScreen = () => {
 
       <View style={styles.menuContainer}>
        
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem}onPress={() => navigation.navigate("Notification")}>
           <Bell size={24} color="#003366" />
           <Text style={styles.menuText}>Notifications</Text>
           <CaretRight size={24} color="#003366" />
@@ -76,7 +76,7 @@ const ProfileScreen = () => {
           <CaretRight size={24} color="#003366" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("SignIn")}>
           <SignOut size={24} color="#003366" />
           <Text style={styles.menuText}>Log out</Text>
           <CaretRight size={24} color="#003366" />

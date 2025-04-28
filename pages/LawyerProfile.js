@@ -1,4 +1,4 @@
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import {
     
@@ -21,7 +21,42 @@ const LawyerProfile = ({ route, navigation }) => {
       Linking.openURL(`tel:${phoneNumber}`);
     }
   };
+  const handleMessagePress = async () => {
+  try {
+    const userId = await AsyncStorage.getItem('userId');
+    const conversationId = await initiateConversation(userId, lawyer.id);
 
+    navigation.navigate('ChatPage', {
+      conversationId,
+      userId,
+      lawyerId: lawyer.id
+    });
+  } catch (error) {
+    ToastAndroid.show(`Error starting chat: ${error.message}`, ToastAndroid.SHORT);
+  }
+};
+
+
+  const initiateConversation = async (userId, lawyerId) => {
+    try {
+      const response = await fetch('http://192.168.43.76:5000/api/initiateConversation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, lawyerId }),
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        return data.conversationId;
+      } else {
+        throw new Error(data.message || 'Failed to initiate conversation');
+      }
+    } catch (error) {
+      console.error('Error initiating conversation:', error);
+      throw error;
+    }
+  };
+  
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -42,7 +77,7 @@ const LawyerProfile = ({ route, navigation }) => {
       </View>
 
       <View style={styles.actionButtons}>
-        <TouchableOpacity style={styles.messageButton} onPress={() => navigation.navigate('Messages')}>
+        <TouchableOpacity style={styles.messageButton} onPress={handleMessagePress}>
         <MaterialCommunityIcons name="send"   size={20}   color="#FFF"
             style={{ transform: [{ rotate: '315deg' }] }}
         />
@@ -155,7 +190,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
   
     // Android elevation
-    elevation: 20, // كل ما زاد الرقم، كان الظل أوضح
+    elevation: 20, 
   },
   lawyerName: {
     fontSize: 24,

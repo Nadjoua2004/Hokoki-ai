@@ -10,12 +10,14 @@ import LawyerAcc from './pages/LawyerAcc.js';
 import ChatPage from './pages/ChatPage.js';
 import ResetPass from './pages/ResetPass.js';
 import Welcom from './pages/Welcom.js';
+import Notification from './pages/Notification.js';
 import LawyerProfile from './pages/LawyerProfile.js';
 import MainContainer from './navigation/MainContainer'; 
 import ChatBot  from './navigation/screens/ChatBot.js'; 
 import Documments from './navigation/screens/Documments.js'; 
 import LawyerMain from './navigation/screens/LawyerMain.js'; 
 import Profile from './navigation/screens/Profile.js'; 
+import termsConditions from './pages/termsConditions.js'; 
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -37,7 +39,9 @@ export default function App() {
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="ChatPage" component={ChatPage} />
         <Stack.Screen name="LawyerProfile" component={LawyerProfile} />
-         {/* Navigate to MainTabs after login */}
+        <Stack.Screen name="Notification" component={Notification} />
+        <Stack.Screen name="termsConditions" component={termsConditions} />
+         
       </Stack.Navigator>
     </NavigationContainer>
   );
