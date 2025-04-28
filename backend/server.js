@@ -225,6 +225,8 @@ app.get('/api/lawyers', async (req, res) => {
     const processedLawyers = lawyers.map(lawyer => ({
       id: lawyer._id,
       name: lawyer.name,
+      email: lawyer.email,
+       phonenumb: lawyer.phonenumb,
       surname: lawyer.surname,
       photo: lawyer.photo || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
       experienceYears: lawyer.experienceYears || 0,
