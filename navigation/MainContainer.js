@@ -74,18 +74,18 @@ export default function MainContainer() {
       <Tab.Screen name={DocumentsName} component={Documments} />
       <Tab.Screen name={LawyerMainName} component={LawyerMain} />
       <Tab.Screen
-        name={ProfileName}
-        component={userType === 'lawyer' ? ProfileLawyer : Profile}
-        listeners={({ navigation }) => ({
-          tabPress: (e) => {
-            // Prevent navigation if userType isn't loaded yet
-            if (userType === null) {
-              e.preventDefault();
-              console.warn('User type not determined yet');
-            }
-          },
-        })}
-      />
+  name={ProfileName}
+  component={userType === 'lawyer' ? ProfileLawyer : Profile}
+  listeners={({ navigation }) => ({
+    tabPress: (e) => {
+      if (loading) {
+        e.preventDefault();
+        console.warn('Still loading userType...');
+      }
+    },
+  })}
+/>
+
     </Tab.Navigator>
   );
 }
