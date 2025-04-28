@@ -10,9 +10,11 @@ const socketIo = require('socket.io');
 const User = require('./models/User');
 const Lawyer = require('./models/Lawyer');
 const Message = require('./models/Message');
-const Conversation = require('./models/Conversation'); // Import the Conversation model
+const Conversation = require('./models/Conversation');
+const Request = require('./models/Request');
 
 const app = express();
+
 app.use((req, res, next) => {
   console.log(`[DEBUG] Incoming request: ${req.method} ${req.url}`);
   next();
@@ -25,7 +27,10 @@ app.use(cors({
 app.use(bodyParser.json());
 
 // Connect to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/mydb')
+mongoose.connect('mongodb://127.0.0.1:27017/mydb', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
   .then(() => console.log('✅ MongoDB Connected'))
   .catch(err => console.error('❌ MongoDB Connection Error:', err));
 
@@ -35,7 +40,7 @@ const io = socketIo(server, {
   cors: { origin: '*', methods: ['GET', 'POST'] }
 });
 
-// In‑memory map of connected users
+// In-memory map of connected users
 const activeUsers = new Map();
 
 io.on('connection', (socket) => {
@@ -241,7 +246,45 @@ app.get('/api/lawyers', async (req, res) => {
     });
   }
 });
+// Lawyer Profile Endpoint
+app.get('/api/lawyer/:id', async (req, res) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ success: false, message: 'Invalid ID format' });
+    }
 
+    const lawyer = await Lawyer.findById(req.params.id)
+      .select('-password -__v')
+      .lean();
+
+    if (!lawyer) {
+      return res.status(404).json({ success: false, message: 'Lawyer not found' });
+    }
+
+    res.json({
+      success: true,
+      lawyer: {
+        id: lawyer._id,
+        name: lawyer.name,
+        surname: lawyer.surname,
+        email: lawyer.email,
+        phonenumb: lawyer.phonenumb,
+        idc: lawyer.idc,
+        experienceYears: lawyer.experienceYears,
+        wilaya: lawyer.wilaya,
+        rating: lawyer.rating,
+        photo: lawyer.photo,
+        createdAt: lawyer.createdAt
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false,
+      message: 'Failed to fetch lawyer profile',
+      error: error.message 
+    });
+  }
+});
 // ========================
 // CONVERSATION & MESSAGES
 // ========================
@@ -304,6 +347,58 @@ app.get('/api/user/:userId/conversations', async (req, res) => {
   } catch (error) {
     console.error('[ERROR] Fetching conversations:', error);
     res.status(500).json({ success: false, message: 'Error fetching conversations' });
+  }
+});
+
+// Create a request
+app.post('/api/createRequest', async (req, res) => {
+  try {
+    const { userId, lawyerId } = req.body;
+    const request = new Request({ userId, lawyerId });
+    await request.save();
+    res.status(201).json({ message: 'Request sent successfully!' });
+  } catch (error) {
+    console.error('[ERROR] Creating request:', error);
+    res.status(500).json({ message: 'Failed to send request' });
+  }
+});
+
+// Fetch requests for a lawyer
+app.get('/api/lawyerRequests/:lawyerId', async (req, res) => {
+  try {
+    console.log('[DEBUG] Fetching requests for lawyer:', req.params.lawyerId);
+    const requests = await Request.find({ lawyerId: req.params.lawyerId, status: 'pending' });
+    console.log('[DEBUG] Requests fetched:', requests);
+    res.json(requests);
+  } catch (error) {
+    console.error('[ERROR] Fetching requests:', error);
+    res.status(500).json({ message: 'Failed to fetch requests' });
+  }
+});
+
+// Update request status
+app.post('/api/updateRequestStatus', async (req, res) => {
+  try {
+    const { requestId, status } = req.body;
+    const request = await Request.findById(requestId);
+    if (!request) {
+      return res.status(404).json({ message: 'Request not found' });
+    }
+    request.status = status;
+    await request.save();
+
+    if (status === 'accepted') {
+      // Initiate conversation
+      const conversation = new Conversation({
+        participants: [request.userId, request.lawyerId]
+      });
+      await conversation.save();
+    }
+
+    res.json({ message: 'Request status updated' });
+  } catch (error) {
+    console.error('[ERROR] Updating request status:', error);
+    res.status(500).json({ message: 'Failed to update request status' });
   }
 });
 

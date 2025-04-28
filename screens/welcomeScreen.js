@@ -9,7 +9,7 @@ export default function welcomeScreen({ navigation }) {
       <Image source={logoImg} style={{width:121,height:121} }/>
       <Text style={{  fontSize: 30,fontWeight: 'bold',color: 'white',} }>Hokoki ai </Text>
       <StatusBar style="auto" />
-      <Text style={{  lineHeight: 24, textAlign:"center",marginHorizontal: 45 ,fontSize: 22,color: 'white',} }>Algeria’s First AI-Powered Legal Assistant</Text>
+      <Text style={{  lineHeight: 24, textAlign:"center",marginHorizontal: 45 ,fontSize: 22,color: 'white',} }>Algeria’s AI-Powered Legal Assistant</Text>
       <TouchableOpacity 
   style={{
     backgroundColor: 'white',
