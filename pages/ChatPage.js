@@ -9,7 +9,10 @@ import {
   KeyboardAvoidingView,
   Platform,
   ToastAndroid,
-  Alert
+  Alert,
+  Keyboard,
+  Image,
+  SafeAreaView
 } from 'react-native';
 import io from 'socket.io-client';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -21,6 +24,8 @@ const ChatPage = ({ route }) => {
   const [newMessage, setNewMessage] = useState('');
   const [userId, setUserId] = useState(null);
   const [isFirstMessage, setIsFirstMessage] = useState(false);
+  const [lawyerName, setLawyerName] = useState('');
+  const [lawyerPhoto, setLawyerPhoto] = useState('https://cdn-icons-png.flaticon.com/512/3135/3135715.png');
   const socketRef = useRef(null);
   const flatListRef = useRef(null);
 
@@ -28,14 +33,32 @@ const ChatPage = ({ route }) => {
     const fetchUserId = async () => {
       const id = await AsyncStorage.getItem('userId');
       setUserId(id);
+
+      if (id && socketRef.current) {
+        socketRef.current.emit('login', { userId: id, role: 'user' });
+      }
     };
 
     fetchUserId();
   }, []);
 
   useEffect(() => {
+    const fetchLawyerDetails = async () => {
+      try {
+        const response = await fetch(`http://192.168.43.76:5000/api/lawyer/${lawyerId}`);
+        const data = await response.json();
+        setLawyerName(data.lawyer.name);
+        setLawyerPhoto(data.lawyer.photo || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png');
+      } catch (error) {
+        console.error('Failed to fetch lawyer details:', error);
+      }
+    };
+
+    fetchLawyerDetails();
+  }, [lawyerId]);
+
+  useEffect(() => {
     if (userId && conversationId) {
-      // Check if this is the first message in conversation
       const checkFirstMessage = async () => {
         try {
           const response = await fetch(
@@ -50,11 +73,11 @@ const ChatPage = ({ route }) => {
 
       checkFirstMessage();
 
-      // Setup socket connection
       socketRef.current = io('http://192.168.43.76:5000', {
         transports: ['websocket'],
       });
 
+      socketRef.current.emit('login', { userId, role: 'user' });
       socketRef.current.emit('joinConversation', conversationId);
 
       socketRef.current.on('newMessage', (message) => {
@@ -62,7 +85,6 @@ const ChatPage = ({ route }) => {
         scrollToBottom();
       });
 
-      // Fetch existing messages
       const fetchMessages = async () => {
         try {
           const response = await fetch(
@@ -91,7 +113,6 @@ const ChatPage = ({ route }) => {
     if (!newMessage.trim()) return;
 
     try {
-      // First, check if we need to create a request
       if (isFirstMessage) {
         const requestResponse = await fetch('http://192.168.43.76:5000/api/createRequest', {
           method: 'POST',
@@ -110,7 +131,6 @@ const ChatPage = ({ route }) => {
         setIsFirstMessage(false);
       }
 
-      // Then send the message
       const messageResponse = await fetch('http://192.168.43.76:5000/api/message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -129,6 +149,8 @@ const ChatPage = ({ route }) => {
       const messageData = await messageResponse.json();
       socketRef.current.emit('sendMessage', messageData.message);
       setNewMessage('');
+      Keyboard.dismiss();
+      setTimeout(scrollToBottom, 100);
     } catch (error) {
       console.error('Error:', error);
       ToastAndroid.show('Failed to send message', ToastAndroid.SHORT);
@@ -150,68 +172,91 @@ const ChatPage = ({ route }) => {
   );
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-      keyboardVerticalOffset={80}
-    >
-       <View style={styles.header}>
-    <TouchableOpacity>
-      <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
-    </TouchableOpacity>
-    <View style={styles.profileInfo}>
-      <View style={styles.profilePic} />
-      <View>
-        <Text style={styles.name}>M. Djerbi Rachid</Text>
-        <Text style={styles.status}>online</Text>
-      </View>
-    </View>
-  </View>
-      <FlatList
-        ref={flatListRef}
-        data={messages}
-        keyExtractor={(item) => item._id.toString()}
-        renderItem={renderMessage}
-        contentContainerStyle={styles.messagesContainer}
-        onContentSizeChange={scrollToBottom}
-        onLayout={scrollToBottom}
-      />
-
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          value={newMessage}
-          onChangeText={setNewMessage}
-          placeholder="Type your message..."
-          multiline
-        />
-        <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-          <Text style={styles.sendButtonText}>Send</Text>
+    <SafeAreaView style={styles.safeArea}>
+      {/* Fixed Header */}
+      <View style={styles.header}>
+        <TouchableOpacity>
+          <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
         </TouchableOpacity>
+        <View style={styles.profileInfo}>
+          <Image source={{ uri: lawyerPhoto }} style={styles.profilePic} />
+          <Text style={styles.name}>{lawyerName}</Text>
+        </View>
       </View>
-    </KeyboardAvoidingView>
+
+      {/* Messages Area */}
+      <View style={styles.messagesWrapper}>
+        <FlatList
+          ref={flatListRef}
+          data={messages}
+          keyExtractor={(item) => item._id.toString()}
+          renderItem={renderMessage}
+          contentContainerStyle={styles.messagesContent}
+          onContentSizeChange={scrollToBottom}
+          onLayout={scrollToBottom}
+        />
+      </View>
+
+      {/* Keyboard-Aware Input Area */}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        keyboardVerticalOffset={0}
+      >
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            value={newMessage}
+            onChangeText={setNewMessage}
+            placeholder="Type your message..."
+            multiline
+            onSubmitEditing={sendMessage}
+          />
+          <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+            <Text style={styles.sendButtonText}>Send</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
-
-
-
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: '#f8f9fa',
+  },
+  container: {
+    flex: 1,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
+    padding: 15,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
+    marginTop: 23,
   },
-  messagesContainer: {
+  profileInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 10,
+  },
+  profilePic: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  messagesWrapper: {
+    flex: 1,
+  },
+  messagesContent: {
     padding: 15,
-    paddingBottom: 80,
   },
   messageBubble: {
     maxWidth: '80%',
@@ -255,17 +300,21 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
+    minHeight: 40,
+    maxHeight: 100,
     backgroundColor: '#fff',
-    padding: 12,
-    borderRadius: 24,
-    marginRight: 8,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 20,
+    marginRight: 10,
     borderWidth: 1,
     borderColor: '#ddd',
   },
   sendButton: {
     backgroundColor: '#003366',
-    padding: 12,
-    borderRadius: 24,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 20,
   },
   sendButtonText: {
     color: '#fff',

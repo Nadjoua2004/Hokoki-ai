@@ -75,7 +75,6 @@ export default function MainContainer() {
       <Tab.Screen name={LawyerMainName} component={LawyerMain} />
       <Tab.Screen
   name={ProfileName}
-  component={userType === 'lawyer' ? ProfileLawyer : Profile}
   listeners={({ navigation }) => ({
     tabPress: (e) => {
       if (loading) {
@@ -84,7 +83,10 @@ export default function MainContainer() {
       }
     },
   })}
-/>
+>
+  {() => (userType === 'lawyer' ? <ProfileLawyer /> : <Profile />)}
+</Tab.Screen>
+
 
     </Tab.Navigator>
   );
