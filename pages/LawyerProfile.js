@@ -125,7 +125,7 @@ const LawyerProfile = ({ route, navigation }) => {
         <View style={styles.infoItem}>
           <MaterialCommunityIcons name="email" size={20} color="#003366" />
           <Text style={styles.infoLabel}>Email: </Text>
-          <Text style={styles.infoText}>{lawyer.email}{lawyer.name}</Text>
+          <Text style={styles.infoText}>{lawyer.email}</Text>
         </View>
         <View style={styles.infoItem}>
           <MaterialCommunityIcons name="phone" size={20} color="#003366" />
