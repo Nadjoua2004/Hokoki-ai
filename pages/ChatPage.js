@@ -171,11 +171,11 @@ const ChatPage = ({ route }) => {
     </View>
   );
 
-  return (
+ return (
     <SafeAreaView style={styles.safeArea}>
       {/* Fixed Header */}
       <View style={styles.header}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
         </TouchableOpacity>
         <View style={styles.profileInfo}>
@@ -185,23 +185,27 @@ const ChatPage = ({ route }) => {
       </View>
 
       {/* Messages Area */}
-      <View style={styles.messagesWrapper}>
-        <FlatList
-          ref={flatListRef}
-          data={messages}
-          keyExtractor={(item) => item._id.toString()}
-          renderItem={renderMessage}
-          contentContainerStyle={styles.messagesContent}
-          onContentSizeChange={scrollToBottom}
-          onLayout={scrollToBottom}
-        />
-      </View>
-
-      {/* Keyboard-Aware Input Area */}
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
-        keyboardVerticalOffset={0}
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.select({
+          ios: 90,
+          android: 0
+        })}
       >
+        <View style={styles.messagesWrapper}>
+          <FlatList
+            ref={flatListRef}
+            data={messages}
+            keyExtractor={(item) => item._id.toString()}
+            renderItem={renderMessage}
+            contentContainerStyle={styles.messagesContent}
+            onContentSizeChange={scrollToBottom}
+            onLayout={scrollToBottom}
+          />
+        </View>
+
+        {/* Input Area */}
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -211,8 +215,16 @@ const ChatPage = ({ route }) => {
             multiline
             onSubmitEditing={sendMessage}
           />
-          <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-            <Text style={styles.sendButtonText}>Send</Text>
+          <TouchableOpacity 
+            style={styles.sendButton} 
+            onPress={sendMessage}
+            disabled={!newMessage.trim()}
+          >
+            <MaterialCommunityIcons 
+              name="send" 
+              size={24} 
+              color={newMessage.trim() ? '#fff' : '#ccc'} 
+            />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -235,12 +247,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
-    marginTop: 23,
   },
   profileInfo: {
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 10,
+    flex: 1,
   },
   profilePic: {
     width: 40,
@@ -254,9 +266,11 @@ const styles = StyleSheet.create({
   },
   messagesWrapper: {
     flex: 1,
+    paddingBottom: 10,
   },
   messagesContent: {
     padding: 15,
+    paddingBottom: 70, // Add extra padding at the bottom
   },
   messageBubble: {
     maxWidth: '80%',
@@ -294,6 +308,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
+    paddingBottom: Platform.select({
+      ios: 25,
+      android: 10
+    }),
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderTopColor: '#e1e1e1',
@@ -302,23 +320,23 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: 40,
     maxHeight: 100,
-    backgroundColor: '#fff',
+    backgroundColor: '#f0f0f0',
     paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingVertical: Platform.select({
+      ios: 10,
+      android: 8
+    }),
     borderRadius: 20,
     marginRight: 10,
-    borderWidth: 1,
-    borderColor: '#ddd',
+    fontSize: 16,
   },
   sendButton: {
-    backgroundColor: '#003366',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    width: 40,
+    height: 40,
     borderRadius: 20,
-  },
-  sendButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    backgroundColor: '#003366',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
