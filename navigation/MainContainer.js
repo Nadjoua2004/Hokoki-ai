@@ -10,6 +10,7 @@ import ChatBot from './screens/ChatBot';
 import LawyerMain from './screens/LawyerMain';
 import Profile from './screens/Profile';
 import ProfileLawyer from './screens/ProfileLawyer';
+import LawyerAnonyme from './screens/LawyerAnonyme';
 
 const DocumentsName = 'Doc';
 const ChatBotName = 'ChatBot';
@@ -72,21 +73,22 @@ export default function MainContainer() {
     >
       <Tab.Screen name={ChatBotName} component={ChatBot} />
       <Tab.Screen name={DocumentsName} component={Documments} />
-      <Tab.Screen name={LawyerMainName} component={LawyerMain} />
       <Tab.Screen
-  name={ProfileName}
-  listeners={({ navigation }) => ({
-    tabPress: (e) => {
-      if (loading) {
-        e.preventDefault();
-        console.warn('Still loading userType...');
-      }
-    },
-  })}
->
-  {() => (userType === 'lawyer' ? <ProfileLawyer /> : <Profile />)}
-</Tab.Screen>
-
+        name={LawyerMainName}
+        component={userType === 'lawyer' ? LawyerMain : LawyerAnonyme}
+      />
+      <Tab.Screen
+        name={ProfileName}
+        component={userType === 'lawyer' ? ProfileLawyer : Profile}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            if (loading) {
+              e.preventDefault();
+              console.warn('Still loading userType...');
+            }
+          },
+      })}
+/>
 
     </Tab.Navigator>
   );

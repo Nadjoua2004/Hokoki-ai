@@ -45,7 +45,7 @@ const ChatPage = ({ route }) => {
   useEffect(() => {
     const fetchLawyerDetails = async () => {
       try {
-        const response = await fetch(`http://192.168.43.76:5000/api/lawyer/${lawyerId}`);
+        const response = await fetch(`http://192.168.142.152:5000/api/lawyer/${lawyerId}`);
         const data = await response.json();
         setLawyerName(data.lawyer.name);
         setLawyerPhoto(data.lawyer.photo || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png');
@@ -62,7 +62,7 @@ const ChatPage = ({ route }) => {
       const checkFirstMessage = async () => {
         try {
           const response = await fetch(
-            `http://192.168.43.76:5000/api/conversation/${conversationId}/messages`
+            `http://192.168.142.152:5000/api/conversation/${conversationId}/messages`
           );
           const data = await response.json();
           setIsFirstMessage(data.messages.length === 0);
@@ -73,7 +73,7 @@ const ChatPage = ({ route }) => {
 
       checkFirstMessage();
 
-      socketRef.current = io('http://192.168.43.76:5000', {
+      socketRef.current = io('http://192.168.142.152:5000', {
         transports: ['websocket'],
       });
 
@@ -88,7 +88,7 @@ const ChatPage = ({ route }) => {
       const fetchMessages = async () => {
         try {
           const response = await fetch(
-            `http://192.168.43.76:5000/api/conversation/${conversationId}/messages`
+            `http://192.168.142.152:5000/api/conversation/${conversationId}/messages`
           );
           const data = await response.json();
           setMessages(data.messages || []);
@@ -114,7 +114,7 @@ const ChatPage = ({ route }) => {
 
     try {
       if (isFirstMessage) {
-        const requestResponse = await fetch('http://192.168.43.76:5000/api/createRequest', {
+        const requestResponse = await fetch('http://192.168.142.152:5000/api/createRequest', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -131,7 +131,7 @@ const ChatPage = ({ route }) => {
         setIsFirstMessage(false);
       }
 
-      const messageResponse = await fetch('http://192.168.43.76:5000/api/message', {
+      const messageResponse = await fetch('http://192.168.142.152:5000/api/message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

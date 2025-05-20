@@ -349,7 +349,7 @@ const ProfileLawyer = () => {
           throw new Error('Lawyer ID not found in storage');
         }
 
-        const response = await fetch(`http://192.168.43.76:5000/api/lawyer/${lawyerId}`);
+        const response = await fetch(`http://192.168.142.152:5000/api/lawyer/${lawyerId}`);
         
         // First check if response is ok
         if (!response.ok) {

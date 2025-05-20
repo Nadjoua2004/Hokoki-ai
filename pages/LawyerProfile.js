@@ -39,7 +39,7 @@ const LawyerProfile = ({ route, navigation }) => {
 
   const initiateConversation = async (userId, lawyerId) => {
     try {
-      const response = await fetch('http://192.168.43.76:5000/api/initiateConversation', {
+      const response = await fetch('http://192.168.142.152:5000/api/initiateConversation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, lawyerId }),

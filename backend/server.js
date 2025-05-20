@@ -12,6 +12,8 @@ const Lawyer = require('./models/Lawyer');
 const Message = require('./models/Message');
 const Conversation = require('./models/Conversation');
 const Request = require('./models/Request');
+const Document = require('./models/Document'); // Ensure this is imported
+
 
 const app = express();
 
@@ -20,11 +22,10 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware
 app.use(cors({
-  origin: ['http://localhost:19006', 'http://192.168.43.76:19006']
+  origin: ['http://localhost:19006', 'http://192.168.142.152:19006']
 }));
-app.use(bodyParser.json());
+app.use(express.json());
 
 // Connect to MongoDB
 mongoose.connect('mongodb://127.0.0.1:27017/mydb', {
@@ -66,7 +67,7 @@ io.on('connection', (socket) => {
       console.log('[DEBUG] Received message data:', messageData);
       const newMessage = new Message(messageData);
       await newMessage.save();
-      console.log('[DEBUG] Message saved:', newMessage); 
+      console.log('[DEBUG] Message saved:', newMessage);
       socket.to(messageData.conversationId).emit('receiveMessage', newMessage);
       socket.emit('receiveMessage', newMessage);
     } catch (error) {
@@ -460,6 +461,118 @@ app.post('/api/message', async (req, res) => {
     res.status(500).json({ message: 'Failed to send message' });
   }
 });
+
+
+//
+//Documments 
+//
+// API to create a document
+
+
+
+app.post('/api/documents', async (req, res) => {
+  try {
+    const { title, number, entity, type, pdfUrl, relatedTo } = req.body;
+
+    
+
+    // Create new document
+    const document = new Document({
+      title,
+      number,
+      entity: parseInt(entity),
+      type: parseInt(type),
+      pdfUrl,
+      relatedTo: relatedTo || null
+    });
+
+    await document.save();
+
+    res.status(201).json({
+      message: 'Document created successfully!',
+      document: {
+        id: document._id,
+        title: document.title,
+        entity: document.entity,
+        type: document.type,
+        pdfUrl: document.pdfUrl
+      }
+    });
+  } catch (error) {
+    console.error('[ERROR] Creating document:', error);
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: 'Server error during document creation' });
+  }
+});
+
+
+
+
+
+
+// API to fetch documents
+app.get('/api/documents', async (req, res) => {
+  try {
+    console.log('[DEBUG] Fetching documents from database...');
+    const documents = await Document.find({});
+    console.log('[DEBUG] Documents fetched:', documents.length);
+
+    const processedDocuments = documents.map(document => ({
+      id: document._id,
+      title: document.title,
+      number: document.number,
+      entity: document.entity,
+      type: document.type,
+      pdfUrl: document.pdfUrl,
+      relatedTo: document.relatedTo,
+      createdAt: document.createdAt,
+      updatedAt: document.updatedAt
+    }));
+
+    console.log('[DEBUG] Sending response with documents data...');
+    res.json({
+      success: true,
+      count: processedDocuments.length,
+      documents: processedDocuments
+    });
+  } catch (error) {
+    console.error('[ERROR] Fetching documents:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch documents',
+      error: error.message
+    });
+  }
+});
+
+// Get related documents endpoint
+app.get('/api/documents/related/:id', async (req, res) => {
+  try {
+    // Validate the ID parameter
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ error: 'Invalid document ID' });
+    }
+
+    // Find documents where relatedTo matches the provided ID
+    const relatedDocuments = await Document.find({ relatedTo: req.params.id });
+
+    res.status(200).json({ 
+      success: true,
+      count: relatedDocuments.length,
+      documents: relatedDocuments 
+    });
+  } catch (err) {
+    console.error('Error fetching related documents:', err);
+    res.status(500).json({ 
+      success: false,
+      error: 'Server error while fetching related documents' 
+    });
+  }
+});
+
+
 
 // START SERVER
 const PORT = 5000;

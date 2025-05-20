@@ -203,7 +203,7 @@ const Notifications = ({ navigation }) => {
   const fetchRequests = async (lawyerId) => {
     try {
       setLoading(true);
-      const response = await fetch(`http://192.168.43.76:5000/api/lawyerRequests/${lawyerId}`);
+      const response = await fetch(`http://192.168.142.152:5000/api/lawyerRequests/${lawyerId}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -219,7 +219,7 @@ const Notifications = ({ navigation }) => {
 
   const acceptRequest = async (requestId, userId) => {
     try {
-      const response = await fetch('http://192.168.43.76:5000/api/updateRequestStatus', {
+      const response = await fetch('http://192.168.142.152:5000/api/updateRequestStatus', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ requestId, status: 'accepted' }),
@@ -248,7 +248,7 @@ const Notifications = ({ navigation }) => {
 
   const rejectRequest = async (requestId) => {
     try {
-      await fetch('http://192.168.43.76:5000/api/updateRequestStatus', {
+      await fetch('http://192.168.142.152:5000/api/updateRequestStatus', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ requestId, status: 'rejected' }),

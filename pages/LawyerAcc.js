@@ -38,7 +38,7 @@ export default function SignIn() {
     }
 
     try {
-      const response = await fetch('http://192.168.43.76:5000/api/lawyer/register', {
+      const response = await fetch('http://192.168.142.152:5000/api/lawyer/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

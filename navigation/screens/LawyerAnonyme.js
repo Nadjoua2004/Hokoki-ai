@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const LawyerMain = ({ navigation }) => {
+const LawyerAnonyme = ({ navigation }) => {
   const [lawyers, setLawyers] = useState([]);
   const [filteredLawyers, setFilteredLawyers] = useState([]);
   const [searchText, setSearchText] = useState('');
@@ -51,9 +51,11 @@ const LawyerMain = ({ navigation }) => {
       const lawyersWithDefaults = lawyersData.map((lawyer, index) => ({
         ...lawyer,
         id: lawyer._id || lawyer.id || index.toString(),
-        photo: lawyer.photo || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+        photo: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', // Default photo for all lawyers
         experienceYears: lawyer.experienceYears || 0,
-        wilaya: lawyer.wilaya || 'Not specified'
+        wilaya: lawyer.wilaya || 'Not specified',
+        description: lawyer.description || 'No description provided',
+        languages: lawyer.languages || []
       }));
 
       console.log('[DEBUG] Processed lawyers:', lawyersWithDefaults);
@@ -92,6 +94,7 @@ const LawyerMain = ({ navigation }) => {
     const infoWidth = screenWidth * 0.6 - 30; // 60% minus padding
     const buttonWidth = screenWidth * 0.2 - 10; // 20% minus padding
     console.log('[DEBUG] Rendering item:', item.id);
+
     return (
       <View style={styles.lawyerContainer}>
         <View style={styles.lawyerProfile}>
@@ -106,7 +109,7 @@ const LawyerMain = ({ navigation }) => {
           {/* 60% width for information */}
           <View style={[styles.infoContainer, { width: infoWidth }]}>
             <Text style={styles.lawyerName} numberOfLines={1} ellipsizeMode="tail">
-              {item.name} {item.surname}
+              Anonymous Lawyer
             </Text>
 
             <View style={styles.detailRow}>
@@ -334,4 +337,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default LawyerMain;
+export default LawyerAnonyme;

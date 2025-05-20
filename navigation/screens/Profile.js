@@ -12,7 +12,7 @@ const ProfileScreen = () => {
     const fetchUserData = async () => {
       try {
         const userId = await AsyncStorage.getItem('userId');
-        const response = await fetch(`http://192.168.43.76:5000/api/user/${userId}`);
+        const response = await fetch(`http://192.168.142.152:5000/api/user/${userId}`);
         const data = await response.json();
         setUser(data);
       } catch (error) {
