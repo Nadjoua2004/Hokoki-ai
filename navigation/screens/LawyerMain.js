@@ -153,7 +153,7 @@ const LawyerMain = ({ navigation }) => {
         <Text style={styles.title}>Search for a Lawyer</Text>
         <TouchableOpacity
           style={styles.messageIcon}
-          onPress={() => navigation.navigate('Messages')}
+          onPress={() => navigation.navigate('Conversations')}
         >
           <MaterialCommunityIcons
             name="message-text-outline"

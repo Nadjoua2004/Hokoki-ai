@@ -407,6 +407,33 @@ app.get('/api/lawyerRequests/:lawyerId', async (req, res) => {
 //     res.status(500).json({ message: 'Failed to update request status' });
 //   }
 // });
+// app.post('/api/updateRequestStatus', async (req, res) => {
+//   try {
+//     const { requestId, status } = req.body;
+//     const request = await Request.findById(requestId);
+//     if (!request) {
+//       return res.status(404).json({ message: 'Request not found' });
+//     }
+//     request.status = status;
+//     await request.save();
+
+//     if (status === 'accepted') {
+//       // Initiate conversation
+//       const conversation = new Conversation({
+//         participants: [request.userId, request.lawyerId]
+//       });
+//       await conversation.save();
+
+//       // Optionally, send a notification or the conversation ID back to the client
+//       return res.status(200).json({ conversationId: conversation._id });
+//     }
+
+//     res.json({ message: 'Request status updated' });
+//   } catch (error) {
+//     console.error('[ERROR] Updating request status:', error);
+//     res.status(500).json({ message: 'Failed to update request status' });
+//   }
+// });
 app.post('/api/updateRequestStatus', async (req, res) => {
   try {
     const { requestId, status } = req.body;
@@ -434,9 +461,31 @@ app.post('/api/updateRequestStatus', async (req, res) => {
     res.status(500).json({ message: 'Failed to update request status' });
   }
 });
+app.get('/api/lawyer/:lawyerId/conversations', async (req, res) => {
+  try {
+    console.log('[DEBUG] Fetching conversations for lawyer:', req.params.lawyerId);
+    const conversations = await Conversation.find({ participants: req.params.lawyerId })
+      .populate({
+        path: 'participants',
+        select: 'name email', // Only get name and email
+        model: 'User' // Specify the model to use
+      })
+      .sort({ createdAt: -1 });
+
+    if (!conversations) {
+      return res.status(404).json({ success: false, message: 'No conversations found' });
+    }
+
+    res.json({ success: true, conversations });
+  } catch (error) {
+    console.error('[ERROR] Fetching conversations:', error);
+    res.status(500).json({ success: false, message: 'Error fetching conversations' });
+  }
+});
 
 app.post('/api/message', async (req, res) => {
   try {
+
     const { conversationId, senderId, receiverId, content } = req.body;
     console.log('[DEBUG] Received message data:', { conversationId, senderId, receiverId, content });
 

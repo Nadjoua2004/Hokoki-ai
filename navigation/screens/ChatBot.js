@@ -1,87 +1,215 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Image } from 'react-native';
+// import React, { useState, useEffect } from 'react';
+// import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const HokokiAI = () => {
-  const [messages, setMessages] = useState([
-    { id: '1', text: 'Hello! I\'m Hokoki AI. How can I help you today?', sender: 'bot' },
-  ]);
-  const [inputText, setInputText] = useState('');
+// const ConversationList = ({ navigation }) => {
+//   const [conversations, setConversations] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [lawyerId, setLawyerId] = useState(null);
 
-  const quickQuestions = [
-    'Do I have the right to paid sick leave?',
-    
-    'What are my rights as an employee in Algeria?'
-  ];
+//   useEffect(() => {
+//     const fetchLawyerId = async () => {
+//       try {
+//         const id = await AsyncStorage.getItem('lawyerId');
+//         setLawyerId(id);
+//         if (id) {
+//           fetchConversations(id);
+//         }
+//       } catch (error) {
+//         console.error('Failed to fetch lawyer ID:', error);
+//       }
+//     };
 
-  const handleSend = () => {
-    if (inputText.trim()) {
-    
-      setMessages(prev => [...prev, { id: Date.now().toString(), text: inputText, sender: 'user' }]);
-      
-      
-      setTimeout(() => {
-        setMessages(prev => [...prev, { 
-          id: (Date.now() + 1).toString(), 
-          text: `response to: "${inputText}"`, 
-          sender: 'bot' 
-        }]);
-      }, 1000);
-      
-      setInputText('');
+//     fetchLawyerId();
+//   }, []);
+
+//   const fetchConversations = async (lawyerId) => {
+//     try {
+//       setLoading(true);
+//       const response = await fetch(`http://192.168.43.76:5000/api/lawyer/${lawyerId}/conversations`);
+//       if (!response.ok) {
+//         throw new Error('Network response was not ok');
+//       }
+//       const data = await response.json();
+//       console.log('Fetched conversations:', data); // Debugging log
+//       setConversations(data.conversations || []);
+//     } catch (error) {
+//       console.error('Failed to fetch conversations:', error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const renderItem = ({ item }) => {
+//     if (!item || !item._id) {
+//       console.log('Undefined item:', item); // Debugging log
+//       return null; // Skip rendering if item or item._id is undefined
+//     }
+
+//     // Directly compare _id without converting to string
+//     const otherParticipant = item.participants.find(p => p._id != lawyerId);
+//     const participantName = otherParticipant ? otherParticipant.name : 'Unknown User';
+
+//     return (
+//       <TouchableOpacity
+//         style={styles.conversationContainer}
+//         onPress={() => navigation.navigate('ChatPage', { conversationId: item._id })}
+//       >
+//         <Text style={styles.conversationText}>{`Conversation with User ${participantName}`}</Text>
+//       </TouchableOpacity>
+//     );
+//   };
+
+//   if (loading) {
+//     return (
+//       <View style={styles.loadingContainer}>
+//         <ActivityIndicator size="large" color="#003366" />
+//       </View>
+//     );
+//   }
+
+//   return (
+//     <View style={styles.container}>
+//       <Text style={styles.title}>Conversations</Text>
+//       <FlatList
+//         data={conversations}
+//         renderItem={renderItem}
+//         keyExtractor={(item, index) => item._id ? item._id.toString() : index.toString()} // Fallback to index if item._id is undefined
+//         contentContainerStyle={styles.listContainer}
+//         ListEmptyComponent={
+//           <Text style={styles.emptyText}>No conversations available</Text>
+//         }
+//       />
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#f8f9fa',
+//     padding: 20,
+//   },
+//   title: {
+//     fontSize: 24,
+//     fontWeight: 'bold',
+//     color: '#003366',
+//     marginBottom: 20,
+//   },
+//   loadingContainer: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   listContainer: {
+//     paddingBottom: 20,
+//   },
+//   conversationContainer: {
+//     backgroundColor: '#fff',
+//     borderRadius: 10,
+//     padding: 15,
+//     marginBottom: 15,
+//     shadowColor: '#000',
+//     shadowOffset: { width: 0, height: 2 },
+//     shadowOpacity: 0.1,
+//     shadowRadius: 4,
+//     elevation: 3,
+//   },
+//   conversationText: {
+//     fontSize: 16,
+//     color: '#333',
+//   },
+//   emptyText: {
+//     fontSize: 16,
+//     color: '#666',
+//     textAlign: 'center',
+//     marginTop: 20,
+//   },
+// });
+
+// export default ConversationList;
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const ConversationList = ({ navigation }) => {
+  const [conversations, setConversations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [lawyerId, setLawyerId] = useState(null);
+
+  useEffect(() => {
+    const fetchLawyerId = async () => {
+      try {
+        const id = await AsyncStorage.getItem('lawyerId');
+        setLawyerId(id);
+        if (id) {
+          fetchConversations(id);
+        }
+      } catch (error) {
+        console.error('Failed to fetch lawyer ID:', error);
+      }
+    };
+
+    fetchLawyerId();
+  }, []);
+
+  const fetchConversations = async (lawyerId) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`http://192.168.43.76:5000/api/lawyer/${lawyerId}/conversations`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      console.log('Fetched conversations:', data); // Debugging log
+      setConversations(data.conversations || []);
+    } catch (error) {
+      console.error('Failed to fetch conversations:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleQuickQuestion = (question) => {
-    setInputText(question);
-    
+  const renderItem = ({ item }) => {
+    if (!item || !item._id) {
+      console.log('Undefined item:', item); // Debugging log
+      return null; // Skip rendering if item or item._id is undefined
+    }
+
+    // Directly compare _id without converting to string
+    const otherParticipant = item.participants.find(p => p._id != lawyerId);
+    const participantName = otherParticipant ? otherParticipant.name : 'Unknown User';
+
+    return (
+      <TouchableOpacity
+        style={styles.conversationContainer}
+        onPress={() => navigation.navigate('ChatPage', { conversationId: item._id })}
+      >
+        <Text style={styles.conversationText}>{`Conversation  ${participantName}`}</Text>
+      </TouchableOpacity>
+    );
   };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#003366" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      
-      <View style={styles.header}>
-        <Image source={require('../../assets/BotLogo.png')} style={styles.logo} />
-        <Text style={styles.title}>Your AI-powered legal assistant</Text>
-      </View>
-
-     
+      <Text style={styles.title}>Conversations</Text>
       <FlatList
-        data={messages}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={[styles.message, item.sender === 'bot' ? styles.botMessage : styles.userMessage]}>
-            <Text style={styles.messageText}>{item.text}</Text>
-          </View>
-        )}
-        contentContainerStyle={styles.messagesContainer}
+        data={conversations}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => item._id ? item._id.toString() : index.toString()} 
+        contentContainerStyle={styles.listContainer}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>No conversations available</Text>
+        }
       />
-
-      {/* Quick questions */}
-      <View style={styles.quickQuestions}>
-        {quickQuestions.map((question, index) => (
-          <TouchableOpacity 
-            key={index} 
-            style={styles.quickQuestion}
-            onPress={() => handleQuickQuestion(question)}
-          >
-            <Text style={styles.quickQuestionText}>{question}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      {/* Input area */}
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          value={inputText}
-          onChangeText={setInputText}
-          placeholder="Type a message..."
-          placeholderTextColor="#999"
-        />
-        <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
-          <Text style={styles.sendButtonText}>Send</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
@@ -89,82 +217,44 @@ const HokokiAI = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e3e2e2',
-    padding: 16,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 8,
-    marginTop: 8,
-    flexDirection: 'row',
-    color:"#a6a2a2", 
-  },
-  logo: {
-    width: 60,
-    height: 60,
-    marginBottom: 10,
+    backgroundColor: '#f8f9fa',
+    padding: 20,
   },
   title: {
-    fontSize: 16,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#003366',
+    marginBottom: 20,
   },
-  messagesContainer: {
-    paddingBottom: 18,
-  },
-  message: {
-    maxWidth: '80%',
-    padding: 12,
-    borderRadius: 12,
-    marginBottom: 8,
-  },
-  botMessage: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#F8F9FF',
-  },
-  userMessage: {
-    alignSelf: 'flex-end',
-    backgroundColor: '#007bff',
-  },
-  messageText: {
-    fontSize: 14,
-  },
-  quickQuestions: {
-    marginBottom: 16,
-  },
-  quickQuestion: {
-    backgroundColor: '#E5F0FF',
-    padding: 10,
-    borderRadius: 8,
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: '#E5F0FF',
-  },
-  quickQuestionText: {
-    color: '#050606',
-  },
-  inputContainer: {
-    flexDirection: 'row',
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  input: {
-    flex: 1,
+  listContainer: {
+    paddingBottom: 20,
+  },
+  conversationContainer: {
     backgroundColor: '#fff',
-    padding: 12,
-    borderRadius: 24,
-    marginRight: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  sendButton: {
-    backgroundColor: '#003366',
-    padding: 12,
-    borderRadius: 24,
+  conversationText: {
+    fontSize: 16,
+    color: '#333',
   },
-  sendButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+  emptyText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
 
-export default HokokiAI;
+export default ConversationList;
