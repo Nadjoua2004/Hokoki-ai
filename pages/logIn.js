@@ -31,8 +31,8 @@ export default function LogIn() {
   
     // Define your primary and fallback URLs
     const urls = [
-      'http://192.168.142.152:5000/api/login',  // Primary URL for users
-      'http://192.168.142.152:5000/api/lawyer/login'    // Fallback URL for lawyers
+      'http://192.168.142.1:5000/api/login',  // Primary URL for users
+      'http://192.168.142.1:5000/api/lawyer/login'    // Fallback URL for lawyers
     ];
   
     let lastError = null;

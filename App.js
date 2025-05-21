@@ -19,7 +19,10 @@ import LawyerMain from './navigation/screens/LawyerMain.js';
 import Profile from './navigation/screens/Profile.js'; 
 import ProfileLawyer from './navigation/screens/ProfileLawyer.js';
 import DocumentDetail from './navigation/screens/DocumentDetail.js'; 
+import Conversations from './navigation/screens/Conversations.js'; 
 import termsConditions from './pages/termsConditions.js'; 
+import AnonymeProfile from './pages/AnonymeProfile.js';
+import UpdateLawyerInfo from './navigation/screens/UpdateLawyerInfo.js';
 
 const Stack = createStackNavigator();
 
@@ -46,6 +49,9 @@ export default function App() {
         <Stack.Screen name="Notification" component={Notification} />
         <Stack.Screen name="termsConditions" component={termsConditions} />
         <Stack.Screen name="DocumentDetail" component={DocumentDetail} />
+        <Stack.Screen name="Conversations" component={Conversations} />
+        <Stack.Screen name="AnonymeProfile" component={AnonymeProfile} />
+        <Stack.Screen name="UpdateLawyerInfo" component={UpdateLawyerInfo} />
          
       </Stack.Navigator>
     </NavigationContainer>

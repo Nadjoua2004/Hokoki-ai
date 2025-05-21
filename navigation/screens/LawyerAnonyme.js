@@ -30,7 +30,7 @@ const LawyerAnonyme = ({ navigation }) => {
       setLoading(true);
       console.log('[DEBUG] Starting fetch...');
 
-      const response = await fetch('http://192.168.142.152:5000/api/lawyers', {
+      const response = await fetch('http://192.168.142.1:5000/api/lawyers', {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -55,7 +55,8 @@ const LawyerAnonyme = ({ navigation }) => {
         experienceYears: lawyer.experienceYears || 0,
         wilaya: lawyer.wilaya || 'Not specified',
         description: lawyer.description || 'No description provided',
-        languages: lawyer.languages || []
+        languages: lawyer.languages || [],
+        anonymousIndex: index + 1 // Add index for anonymous search
       }));
 
       console.log('[DEBUG] Processed lawyers:', lawyersWithDefaults);
@@ -80,45 +81,64 @@ const LawyerAnonyme = ({ navigation }) => {
   };
 
   useEffect(() => {
-    // Filter lawyers based on search text
-    const filtered = lawyers.filter(lawyer =>
-      lawyer.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      lawyer.surname.toLowerCase().includes(searchText.toLowerCase())
-    );
+    if (!searchText) {
+      setFilteredLawyers(lawyers);
+      return;
+    }
+
+    const searchTerm = searchText.toLowerCase();
+    
+    // Filter lawyers based on:
+    // 1. Real name (name + surname)
+    // 2. Anonymous index (e.g., "1", "lawyer 2", etc.)
+    // 3. Wilaya (region)
+    const filtered = lawyers.filter(lawyer => {
+      // Check real name
+      const fullName = `${lawyer.name || ''} ${lawyer.surname || ''}`.toLowerCase();
+      const nameMatch = fullName.includes(searchTerm);
+      
+      // Check anonymous index
+      const indexMatch = 
+        searchTerm.includes(lawyer.anonymousIndex.toString()) || // "1", "2", etc.
+        `lawyer ${lawyer.anonymousIndex}`.includes(searchTerm); // "lawyer 1", etc.
+      
+      // Check wilaya
+      const wilayaMatch = lawyer.wilaya.toLowerCase().includes(searchTerm);
+      
+      return nameMatch || indexMatch || wilayaMatch;
+    });
+    
     setFilteredLawyers(filtered);
   }, [searchText, lawyers]);
 
   const renderItem = ({ item }) => {
     const screenWidth = Dimensions.get('window').width;
-    const photoWidth = screenWidth * 0.2; // 20% of screen width
-    const infoWidth = screenWidth * 0.6 - 30; // 60% minus padding
-    const buttonWidth = screenWidth * 0.2 - 10; // 20% minus padding
-    console.log('[DEBUG] Rendering item:', item.id);
-
+    const photoWidth = screenWidth * 0.2;
+    const infoWidth = screenWidth * 0.6 - 30;
+    const buttonWidth = screenWidth * 0.2 - 10;
+  
     return (
       <View style={styles.lawyerContainer}>
         <View style={styles.lawyerProfile}>
-          {/* 20% width for photo */}
           <View style={[styles.photoContainer, { width: photoWidth }]}>
             <Image
               source={{ uri: item.photo }}
               style={[styles.lawyerImage, { width: photoWidth - 20, height: photoWidth - 20 }]}
             />
           </View>
-
-          {/* 60% width for information */}
+  
           <View style={[styles.infoContainer, { width: infoWidth }]}>
             <Text style={styles.lawyerName} numberOfLines={1} ellipsizeMode="tail">
-              Anonymous Lawyer
+              Anonymous Lawyer {item.anonymousIndex}
             </Text>
-
+  
             <View style={styles.detailRow}>
               <MaterialCommunityIcons name="map-marker" size={14} color="#666" />
               <Text style={styles.lawyerDetail} numberOfLines={1} ellipsizeMode="tail">
                 {item.wilaya}
               </Text>
             </View>
-
+  
             <View style={styles.detailRow}>
               <MaterialCommunityIcons name="briefcase" size={14} color="#666" />
               <Text style={styles.lawyerDetail}>
@@ -126,12 +146,14 @@ const LawyerAnonyme = ({ navigation }) => {
               </Text>
             </View>
           </View>
-
-          {/* 20% width for button */}
+  
           <View style={[styles.buttonContainer, { width: buttonWidth }]}>
             <TouchableOpacity
               style={styles.profileButton}
-              onPress={() => navigation.navigate('LawyerProfile', { lawyer: item })}
+              onPress={() => navigation.navigate('AnonymeProfile', {
+                lawyer: item,
+                anonymousName: `Anonymous Lawyer ${item.anonymousIndex}`
+              })}
             >
               <MaterialCommunityIcons name="chevron-right" size={22} color="#FFF" />
             </TouchableOpacity>
@@ -151,12 +173,11 @@ const LawyerAnonyme = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Header with title and message icon */}
       <View style={styles.header}>
         <Text style={styles.title}>Search for a Lawyer</Text>
         <TouchableOpacity
           style={styles.messageIcon}
-          onPress={() => navigation.navigate('Messages')}
+          onPress={() => navigation.navigate('ChatPage')}
         >
           <MaterialCommunityIcons
             name="message-text-outline"
@@ -166,7 +187,6 @@ const LawyerAnonyme = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Search Bar */}
       <View style={styles.searchContainer}>
         <MaterialCommunityIcons
           name="magnify"
@@ -176,14 +196,13 @@ const LawyerAnonyme = ({ navigation }) => {
         />
         <TextInput
           style={styles.searchInput}
-          placeholder="Find a Lawyer ......"
+          placeholder="Find a Lawyer ....."
           placeholderTextColor="#999"
           value={searchText}
           onChangeText={setSearchText}
         />
       </View>
 
-      {/* Lawyers List */}
       <FlatList
         data={filteredLawyers}
         renderItem={renderItem}

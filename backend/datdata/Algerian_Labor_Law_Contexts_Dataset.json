@@ -1,0 +1,654 @@
+[
+    {
+      "id": "context001",
+      "context": "Article 1: The purpose of this law is to regulate individual and collective labor relations between wage-earning workers and employers."
+    },
+    {
+      "id": "context002",
+      "context": "Article 17: No discrimination based on gender is permitted in matters of employment."
+    },
+    {
+      "id": "context003",
+      "context": "Article 3: An employment contract is an agreement by which a person undertakes to provide services to another person, called the employer, in exchange for remuneration."
+    },
+    {
+      "id": "context004",
+      "context": "Article 46: Female employees are entitled to 14 weeks of maternity leave, covering prenatal and postnatal periods, with full pay."
+    },
+    {
+      "id": "context005",
+      "context": "Article 55: Employers must ensure breastfeeding facilities for female employees as per internal regulations."
+    },
+    {
+      "id": "context006",
+      "context": "Article 141: Violations of working conditions for women may result in sanctions, including fines or imprisonment."
+    },
+    {
+      "id": "context007",
+      "context": "Article 143: Employers failing to comply with maternity leave provisions face penalties under the Labor Code."
+    },
+    {
+      "id": "context008",
+      "context": "Article 5: The legal workweek is set at 40 hours, distributed over at least five working days."
+    },
+    {
+      "id": "context009",
+      "context": "Article 6: Overtime is limited to 20% of legal working hours and must be paid at least 50% above the normal hourly rate."
+    },
+    {
+      "id": "context010",
+      "context": "Article 7: Night work, defined as work between 21:00 and 05:00, is prohibited for workers under 19 years of age."
+    },
+    {
+      "id": "context011",
+      "context": "Article 8: Employees are entitled to a weekly rest day, typically Friday, with compensatory rest if worked."
+    },
+    {
+      "id": "context012",
+      "context": "Article 9: Annual leave is accrued at 2.5 days per month, up to a maximum of 30 calendar days per year."
+    },
+    {
+      "id": "context013",
+      "context": "Article 10: Workers in southern regions are entitled to an additional 10 days of annual leave."
+    },
+    {
+      "id": "context014",
+      "context": "Article 11: Paid absences are granted for union duties, training, and examinations."
+    },
+    {
+      "id": "context015",
+      "context": "Article 12: Employees are entitled to 3 paid days for family events such as marriage, birth, or death of a close relative."
+    },
+    {
+      "id": "context016",
+      "context": "Article 13: Workers are entitled to a one-time paid leave for pilgrimage during their career."
+    },
+    {
+      "id": "context017",
+      "context": "Article 14: Legal holidays, such as 1 May, 5 July, and 1 November, are paid and non-working days."
+    },
+    {
+      "id": "context018",
+      "context": "Article 15: Employees of Christian faith are entitled to paid holidays for Easter Monday, Ascension, 15 August, and 25 December."
+    },
+    {
+      "id": "context019",
+      "context": "Article 16: Employees of Jewish faith are entitled to paid holidays for Rosh Hashanah, Yom Kippur, and Passover."
+    },
+    {
+      "id": "context020",
+      "context": "Article 18: Employers must register employees with social security within 10 days of hiring."
+    },
+    {
+      "id": "context021",
+      "context": "Article 19: Employers must provide a safe working environment, including protective equipment for hazardous tasks."
+    },
+    {
+      "id": "context022",
+      "context": "Article 20: Workplace safety inspections must be conducted regularly by qualified personnel."
+    },
+    {
+      "id": "context023",
+      "context": "Article 21: Employers must maintain records of safety training for at least three years."
+    },
+    {
+      "id": "context024",
+      "context": "Article 22: Workers exposed to eye hazards must be provided with safety goggles."
+    },
+    {
+      "id": "context025",
+      "context": "Article 23: Employers must ensure clean drinking water is available at all workplaces."
+    },
+    {
+      "id": "context026",
+      "context": "Article 24: Noise levels in workplaces must comply with health and safety standards."
+    },
+    {
+      "id": "context027",
+      "context": "Article 25: Employers must conduct risk assessments for industries involving hazardous materials."
+    },
+    {
+      "id": "context028",
+      "context": "Article 26: Workers are entitled to paid sick leave for up to 15 days per year with a medical certificate."
+    },
+    {
+      "id": "context029",
+      "context": "Article 27: Employers must report workplace accidents to the labor inspectorate within 48 hours."
+    },
+    {
+      "id": "context030",
+      "context": "Article 28: Fatal workplace accidents must be reported within 24 hours to the labor inspectorate."
+    },
+    {
+      "id": "context031",
+      "context": "Article 29: Employers must provide ergonomic workstations to prevent occupational injuries."
+    },
+    {
+      "id": "context032",
+      "context": "Article 30: Workers have the right to join trade unions without employer interference."
+    },
+    {
+      "id": "context033",
+      "context": "Article 31: Collective bargaining agreements are binding and must be respected by employers."
+    },
+    {
+      "id": "context034",
+      "context": "Article 32: Employers must provide written notice of termination at least 30 days in advance."
+    },
+    {
+      "id": "context035",
+      "context": "Article 33: Termination without just cause is considered abusive and may result in compensation."
+    },
+    {
+      "id": "context036",
+      "context": "Article 34: Workers dismissed for reporting violations are entitled to reinstatement or compensation."
+    },
+    {
+      "id": "context037",
+      "context": "Article 35: Employers must issue certificates of employment upon termination."
+    },
+    {
+      "id": "context038",
+      "context": "Article 36: Pay slips must detail all salary components, including bonuses and deductions."
+    },
+    {
+      "id": "context039",
+      "context": "Article 37: Salaries are protected from seizure except under specific legal conditions."
+    },
+    {
+      "id": "context040",
+      "context": "Article 38: Employers must provide training to enhance workers' skills and productivity."
+    },
+    {
+      "id": "context041",
+      "context": "Article 39: Workers have the right to participate in workplace decision-making through elected representatives."
+    },
+    {
+      "id": "context042",
+      "context": "Article 40: Employers must ensure non-discrimination based on religion, ethnicity, or union membership."
+    },
+    {
+      "id": "context043",
+      "context": "Article 41: Workers are entitled to social security benefits, including health and retirement coverage."
+    },
+    {
+      "id": "context044",
+      "context": "Article 42: Employers must contribute to social security funds on behalf of employees."
+    },
+    {
+      "id": "context045",
+      "context": "Article 43: Workers have the right to a safe and healthy work environment free from harassment."
+    },
+    {
+      "id": "context046",
+      "context": "Article 44: Employers must establish policies to prevent workplace harassment."
+    },
+    {
+      "id": "context047",
+      "context": "Article 45: Workers are entitled to severance pay in case of redundancy."
+    },
+    {
+      "id": "context048",
+      "context": "Article 46: Employers must maintain attendance records for at least two years."
+    },
+    {
+      "id": "context049",
+      "context": "Article 47: Workers have the right to request flexible work arrangements for family or medical reasons."
+    },
+    {
+      "id": "context050",
+      "context": "Article 48: Employers must provide paid leave for mental health counseling."
+    },
+    {
+      "id": "context051",
+      "context": "Article 49: Workers are entitled to paid leave for adoption of a child."
+    },
+    {
+      "id": "context052",
+      "context": "Article 50: Employers must provide safety harnesses for workers at heights."
+    },
+    {
+      "id": "context053",
+      "context": "Article 51: Workers are entitled to a transportation allowance for work-related travel."
+    },
+    {
+      "id": "context054",
+      "context": "Article 52: Employers must provide respiratory masks for workers exposed to toxic substances."
+    },
+    {
+      "id": "context055",
+      "context": "Article 53: Workers are entitled to paid leave for military service."
+    },
+    {
+      "id": "context056",
+      "context": "Article 54: Employers must provide childcare facilities for employees with young children."
+    },
+    {
+      "id": "context057",
+      "context": "Article 55: Workers are entitled to paid leave for bereavement."
+    },
+    {
+      "id": "context058",
+      "context": "Article 56: Employers must ensure lighting standards comply with occupational health requirements."
+    },
+    {
+      "id": "context059",
+      "context": "Article 57: Workers are entitled to paid leave for religious holidays specific to their faith."
+    },
+    {
+      "id": "context060",
+      "context": "Article 58: Employers must report layoffs to the labor inspectorate within 30 days."
+    },
+    {
+      "id": "context061",
+      "context": "Article 59: Workers have the right to appeal disciplinary sanctions through internal procedures."
+    },
+    {
+      "id": "context062",
+      "context": "Article 60: Employers must provide written contracts in Arabic, specifying salary in Algerian dinars."
+    },
+    {
+      "id": "context063",
+      "context": "Article 61: Workers are entitled to a trial period before permanent employment."
+    },
+    {
+      "id": "context064",
+      "context": "Article 62: Employers must provide paid leave for workers attending court hearings."
+    },
+    {
+      "id": "context065",
+      "context": "Article 63: Workers are entitled to a minimum wage adjusted annually based on economic conditions."
+    },
+    {
+      "id": "context066",
+      "context": "Article 64: Employers must ensure compliance with maximum overtime limits."
+    },
+    {
+      "id": "context067",
+      "context": "Article 65: Workers are entitled to rest periods during shifts exceeding 6 hours."
+    },
+    {
+      "id": "context068",
+      "context": "Article 66: Employers must provide protective clothing for workers in hazardous environments."
+    },
+    {
+      "id": "context069",
+      "context": "Article 67: Workers are entitled to paid leave for compassionate reasons."
+    },
+    {
+      "id": "context070",
+      "context": "Article 68: Employers must ensure compliance with anti-discrimination laws in hiring practices."
+    },
+    {
+      "id": "context071",
+      "context": "Article 69: Workers have the right to request workplace accommodations for disabilities."
+    },
+    {
+      "id": "context072",
+      "context": "Article 70: Employers must provide training on workplace safety annually."
+    },
+    {
+      "id": "context073",
+      "context": "Article 71: Workers are entitled to paid leave for paternity."
+    },
+    {
+      "id": "context074",
+      "context": "Article 72: Employers must ensure compliance with child labor laws prohibiting work for those under 16."
+    },
+    {
+      "id": "context075",
+      "context": "Article 73: Workers are entitled to a notice period of at least 30 days before termination."
+    },
+    {
+      "id": "context076",
+      "context": "Article 74: Employers must provide a policy for workplace diversity training."
+    },
+    {
+      "id": "context077",
+      "context": "Article 75: Workers are entitled to paid leave for attending union meetings."
+    },
+    {
+      "id": "context078",
+      "context": "Article 76: Employers must ensure compliance with laws prohibiting wage deductions without consent."
+    },
+    {
+      "id": "context079",
+      "context": "Article 77: Workers are entitled to legal aid if earning less than twice the SNMG."
+    },
+    {
+      "id": "context080",
+      "context": "Article 78: Employers must provide a hotline for reporting workplace violations anonymously."
+    },
+    {
+      "id": "context081",
+      "context": "Article 79: Workers are entitled to paid leave for attending professional development courses."
+    },
+    {
+      "id": "context082",
+      "context": "Article 80: Employers must ensure compliance with laws prohibiting retaliation for reporting violations."
+    },
+    {
+      "id": "context083",
+      "context": "Article 81: Workers are entitled to a safe work environment free from toxic substances."
+    },
+    {
+      "id": "context084",
+      "context": "Article 82: Employers must provide paid leave for workers participating in national elections."
+    },
+    {
+      "id": "context085",
+      "context": "Article 83: Workers are entitled to a maximum of 12 hours of daily work, including breaks."
+    },
+    {
+      "id": "context086",
+      "context": "Article 84: Employers must ensure compliance with laws prohibiting forced labor."
+    },
+    {
+      "id": "context087",
+      "context": "Article 85: Workers are entitled to paid leave for attending arbitration hearings."
+    },
+    {
+      "id": "context088",
+      "context": "Article 86: Employers must provide a policy for handling workplace grievances."
+    },
+    {
+      "id": "context089",
+      "context": "Article 87: Workers are entitled to a minimum rest period of 30 minutes during an 8-hour shift."
+    },
+    {
+      "id": "context090",
+      "context": "Article 88: Employers must ensure compliance with laws prohibiting child exploitation."
+    },
+    {
+      "id": "context091",
+      "context": "Article 89: Workers are entitled to paid leave for attending safety training sessions."
+    },
+    {
+      "id": "context092",
+      "context": "Article 90: Employers must provide a policy for managing workplace accidents."
+    },
+    {
+      "id": "context093",
+      "context": "Article 91: Workers are entitled to a maximum of 20% overtime hours per week."
+    },
+    {
+      "id": "context094",
+      "context": "Article 92: Employers must ensure compliance with laws prohibiting workplace violence."
+    },
+    {
+      "id": "context095",
+      "context": "Article 93: Workers are entitled to paid leave for attending labor inspectorate meetings."
+    },
+    {
+      "id": "context096",
+      "context": "Article 94: Employers must provide a policy for ensuring equal pay for equal work."
+    },
+    {
+      "id": "context097",
+      "context": "Article 95: Workers are entitled to a safe work environment free from excessive noise."
+    },
+    {
+      "id": "context098",
+      "context": "Article 96: Employers must ensure compliance with laws prohibiting unfair dismissal."
+    },
+    {
+      "id": "context099",
+      "context": "Article 97: Workers are entitled to paid leave for attending collective bargaining sessions."
+    },
+    {
+      "id": "context100",
+      "context": "Article 98: Employers must provide a policy for managing workplace stress."
+    },
+    {
+      "id": "context101",
+      "context": "Article 99: Workers are entitled to a safe work environment free from chemical hazards."
+    },
+    {
+      "id": "context102",
+      "context": "Article 100: Employers must ensure compliance with laws prohibiting wage discrimination."
+    },
+    {
+      "id": "context103",
+      "context": "Article 101: Workers are entitled to paid leave for attending workplace safety audits."
+    },
+    {
+      "id": "context104",
+      "context": "Article 102: Employers must provide a policy for ensuring workplace inclusivity."
+    },
+    {
+      "id": "context105",
+      "context": "Article 103: Workers are entitled to a safe work environment free from physical hazards."
+    },
+    {
+      "id": "context106",
+      "context": "Article 104: Employers must ensure compliance with laws prohibiting harassment based on ethnicity."
+    },
+    {
+      "id": "context107",
+      "context": "Article 105: Workers are entitled to paid leave for attending diversity training."
+    },
+    {
+      "id": "context108",
+      "context": "Article 106: Employers must provide a policy for managing workplace conflicts."
+    },
+    {
+      "id": "context109",
+      "context": "Article 107: Workers are entitled to a safe work environment free from biological hazards."
+    },
+    {
+      "id": "context110",
+      "context": "Article 108: Employers must ensure compliance with laws prohibiting discrimination based on religion."
+    },
+    {
+      "id": "context111",
+      "context": "Article 109: Workers are entitled to paid leave for attending health and safety committee meetings."
+    },
+    {
+      "id": "context112",
+      "context": "Article 110: Employers must provide a policy for ensuring workplace accessibility."
+    },
+    {
+      "id": "context113",
+      "context": "Article 111: Workers are entitled to a safe work environment free from ergonomic hazards."
+    },
+    {
+      "id": "context114",
+      "context": "Article 112: Employers must ensure compliance with laws prohibiting discrimination based on union membership."
+    },
+    {
+      "id": "context115",
+      "context": "Article 113: Workers are entitled to paid leave for attending workplace wellness programs."
+    },
+    {
+      "id": "context116",
+      "context": "Article 114: Employers must provide a policy for managing workplace bullying."
+    },
+    {
+      "id": "context117",
+      "context": "Article 115: Workers are entitled to a safe work environment free from psychological hazards."
+    },
+    {
+      "id": "context118",
+      "context": "Article 116: Employers must ensure compliance with laws prohibiting discrimination based on disability."
+    },
+    {
+      "id": "context119",
+      "context": "Article 117: Workers are entitled to paid leave for attending occupational health assessments."
+    },
+    {
+      "id": "context120",
+      "context": "Article 118: Employers must provide a policy for ensuring workplace mental health support."
+    },
+    {
+      "id": "context121",
+      "context": "Article 119: Workers are entitled to a safe work environment free from electrical hazards."
+    },
+    {
+      "id": "context122",
+      "context": "Article 120: Employers must ensure compliance with laws prohibiting discrimination based on age."
+    },
+    {
+      "id": "context123",
+      "context": "Article 121: Workers are entitled to paid leave for attending workplace safety training."
+    },
+    {
+      "id": "context124",
+      "context": "Article 122: Employers must provide a policy for ensuring workplace gender equality."
+    },
+    {
+      "id": "context125",
+      "context": "Article 123: Workers are entitled to a safe work environment free from thermal hazards."
+    },
+    {
+      "id": "context126",
+      "context": "Article 124: Employers must ensure compliance with laws prohibiting discrimination based on marital status."
+    },
+    {
+      "id": "context127",
+      "context": "Article 125: Workers are entitled to paid leave for attending workplace diversity workshops."
+    },
+    {
+      "id": "context128",
+      "context": "Article 126: Employers must provide a policy for ensuring workplace cultural sensitivity."
+    },
+    {
+      "id": "context129",
+      "context": "Article 127: Workers are entitled to a safe work environment free from radiation hazards."
+    },
+    {
+      "id": "context130",
+      "context": "Article 128: Employers must ensure compliance with laws prohibiting discrimination based on political beliefs."
+    },
+    {
+      "id": "context131",
+      "context": "Article 129: Workers are entitled to paid leave for attending workplace conflict resolution training."
+    },
+    {
+      "id": "context132",
+      "context": "Article 130: Employers must provide a policy for ensuring workplace ethical conduct."
+    },
+    {
+      "id": "context133",
+      "context": "Article 131: Workers are entitled to a safe work environment free from mechanical hazards."
+    },
+    {
+      "id": "context134",
+      "context": "Article 132: Employers must ensure compliance with laws prohibiting discrimination based on sexual orientation."
+    },
+    {
+      "id": "context135",
+      "context": "Article 133: Workers are entitled to paid leave for attending workplace leadership training."
+    },
+    {
+      "id": "context136",
+      "context": "Article 134: Employers must provide a policy for ensuring workplace transparency."
+    },
+    {
+      "id": "context137",
+      "context": "Article 135: Workers are entitled to a safe work environment free from environmental hazards."
+    },
+    {
+      "id": "context138",
+      "context": "Article 136: Employers must ensure compliance with laws prohibiting discrimination based on nationality."
+    },
+    {
+      "id": "context139",
+      "context": "Article 137: Workers are entitled to paid leave for attending workplace team-building activities."
+    },
+    {
+      "id": "context140",
+      "context": "Article 138: Employers must provide a policy for ensuring workplace accountability."
+    },
+    {
+      "id": "context141",
+      "context": "Article 139: Workers are entitled to a safe work environment free from structural hazards."
+    },
+    {
+      "id": "context142",
+      "context": "Article 140: Employers must ensure compliance with laws prohibiting discrimination based on social status."
+    },
+    {
+      "id": "context143",
+      "context": "Article 141: Workers are entitled to paid leave for attending workplace innovation workshops."
+    },
+    {
+      "id": "context144",
+      "context": "Article 142: Employers must provide a policy for ensuring workplace sustainability."
+    },
+    {
+      "id": "context145",
+      "context": "Article 143: Workers are entitled to a safe work environment free from fire hazards."
+    },
+    {
+      "id": "context146",
+      "context": "Article 144: Employers must ensure compliance with laws prohibiting discrimination based on economic status."
+    },
+    {
+      "id": "context147",
+      "context": "Article 145: Workers are entitled to paid leave for attending workplace ethics training."
+    },
+    {
+      "id": "context148",
+      "context": "Article 146: Employers must provide a policy for ensuring workplace fairness."
+    },
+    {
+      "id": "context149",
+      "context": "Article 147: Workers are entitled to a safe work environment free from slip and fall hazards."
+    },
+    {
+      "id": "context150",
+      "context": "Article 148: Employers must ensure compliance with laws prohibiting discrimination based on educational background."
+    },
+    {
+      "id": "context151",
+      "context": "Article 149: Workers are entitled to paid leave for attending workplace compliance training."
+    },
+    {
+      "id": "context152",
+      "context": "Article 150: Employers must provide a policy for ensuring workplace respect."
+    },
+    {
+      "id": "context153",
+      "context": "Article 151: Workers are entitled to a safe work environment free from trip hazards."
+    },
+    {
+      "id": "context154",
+      "context": "Article 152: Employers must ensure compliance with laws prohibiting discrimination based on health status."
+    },
+    {
+      "id": "context155",
+      "context": "Article 153: Workers are entitled to paid leave for attending workplace safety drills."
+    },
+    {
+      "id": "context156",
+      "context": "Article 154: Employers must provide a policy for ensuring workplace collaboration."
+    },
+    {
+      "id": "context157",
+      "context": "Article 155: Workers are entitled to a safe work environment free from falling object hazards."
+    },
+    {
+      "id": "context158",
+      "context": "Article 156: Employers must ensure compliance with laws prohibiting discrimination based on family status."
+    },
+    {
+      "id": "context159",
+      "context": "Article 159: Employers must ensure that all machinery and equipment used in the workplace are maintained in good working condition to prevent occupational accidents and ensure the safety of workers."
+    },
+    {
+      "id": "context160",
+      "context": "Article 160: Workers have the right to refuse to operate any equipment deemed unsafe or defective, provided they inform their supervisor immediately of the situation."
+    },
+    {
+      "id": "context161",
+      "context": "Article 161: Employers are required to conduct regular safety inspections of the workplace and maintain a log of all incidents and corrective actions taken."
+    },
+    {
+      "id": "context162",
+      "context": "Article 162: Any modification to machinery or work processes must be preceded by a risk assessment to evaluate potential hazards to employees."
+    },
+    {
+      "id": "context163",
+      "context": "Article 163: Protective equipment, such as helmets, gloves, and safety shoes, must be provided free of charge to workers exposed to specific risks."
+    }
+  ]

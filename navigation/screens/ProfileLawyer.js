@@ -1,398 +1,97 @@
-// // import React, { useEffect, useState } from 'react';
-// // import { View, Text, Image, ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
-// // import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
-// // import { CaretRight, MagicWand, CaretLeft, Gear, SignOut, Bell } from 'phosphor-react-native';
-// // import { useNavigation } from "@react-navigation/native";
-// // import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// // const ProfileLawyer = () => {
-// //   const [user, setUser] = useState(null);
-// //   const [loading, setLoading] = useState(true);
-// //   const navigation = useNavigation();
-
-// //   useEffect(() => {
-// //     const fetchUserData = async () => {
-// //       try {
-// //         const lawyerId = await AsyncStorage.getItem('lawyerId');
-// //         const response = await fetch(`http://192.168.43.76:5000/api/lawyers/${lawyerId}`);
-
-// //         // Log the full response text for debugging
-// //         const responseText = await response.text();
-// //         console.log('Response Text:', responseText);
-
-// //         if (!response.ok) {
-// //           throw new Error(`Error fetching user data: ${response.statusText}`);
-// //         }
-
-// //         const data = JSON.parse(responseText);
-// //         setUser(data.lawyer); // Ensure you are accessing the correct property
-// //       } catch (error) {
-// //         console.error('Error fetching user data:', error);
-// //       } finally {
-// //         setLoading(false);
-// //       }
-// //     };
-
-// //     fetchUserData();
-// //   }, []);
-
-// //   if (loading) {
-// //     return <ActivityIndicator size="large" color="#003366" />;
-// //   }
-
-// //   if (!user) {
-// //     return <Text>No user data available</Text>;
-// //   }
-
-// //   return (
-// //     <View style={styles.container}>
-// //       <View style={styles.iconTextContainer}>
-// //         <TouchableOpacity onPress={() => navigation.navigate("ChatBot")}>
-// //           <CaretLeft size={32} color="#003366" weight="bold" marginTop='28' />
-// //         </TouchableOpacity>
-// //         <Text style={styles.profileTitle}>Profile</Text>
-// //       </View>
-// //       <View style={styles.profileHeader}>
-// //         <View style={styles.profileImageContainer}>
-// //           <Image
-// //             source={require('../../assets/userprofile.png')}
-// //             style={styles.profileImage}
-// //           />
-// //         </View>
-// //         <Text style={styles.profileName}>{user.name} {user.surname}</Text>
-// //         <Text style={styles.profileContact}>{user.phonenumb}</Text>
-// //         <Text style={styles.profileEmail}>{user.email}</Text>
-// //       </View>
-
-// //       <View style={styles.menuContainer}>
-// //         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Notification")}>
-// //           <Bell size={24} color="#003366" />
-// //           <Text style={styles.menuText}>Notifications</Text>
-// //           <CaretRight size={24} color="#003366" />
-// //         </TouchableOpacity>
-
-// //         <TouchableOpacity style={styles.menuItem}>
-// //           <MagicWand size={24} color="#003366" />
-// //           <Text style={styles.menuText}>Level Up Your Profile</Text>
-// //           <CaretRight size={24} color="#003366" />
-// //         </TouchableOpacity>
-
-// //         <TouchableOpacity style={styles.menuItem}>
-// //           <Gear size={24} color="#003366" />
-// //           <Text style={styles.menuText}>Settings</Text>
-// //           <CaretRight size={24} color="#003366" />
-// //         </TouchableOpacity>
-
-// //         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("SignIn")}>
-// //           <SignOut size={24} color="#003366" />
-// //           <Text style={styles.menuText}>Log out</Text>
-// //           <CaretRight size={24} color="#003366" />
-// //         </TouchableOpacity>
-// //       </View>
-// //     </View>
-// //   );
-// // };
-
-// // const styles = StyleSheet.create({
-// //   container: {
-// //     flex: 1,
-// //     backgroundColor: '#fff',
-// //     padding: 20,
-// //   },
-// //   profileHeader: {
-// //     alignItems: 'center',
-// //     marginBottom: 20,
-// //   },
-// //   profileTitle: {
-// //     fontSize: 24,
-// //     fontWeight: 'bold',
-// //     color: "#003366",
-// //     marginTop: 28
-// //   },
-// //   profileImageContainer: {
-// //     width: 100,
-// //     height: 100,
-// //     borderRadius: 50,
-// //     backgroundColor: '#f0f0f0',
-// //     justifyContent: 'center',
-// //     alignItems: 'center',
-// //     marginBottom: 10,
-// //     marginTop: 28
-// //   },
-// //   profileImage: {
-// //     width: '100%',
-// //     height: '100%',
-// //     borderRadius: 50,
-// //   },
-// //   profileName: {
-// //     fontSize: 18,
-// //     fontWeight: 'bold',
-// //   },
-// //   profileContact: {
-// //     fontSize: 16,
-// //     color: '#555',
-// //   },
-// //   profileEmail: {
-// //     fontSize: 16,
-// //     color: '#555',
-// //   },
-// //   menuContainer: {
-// //     marginTop: 20,
-// //   },
-// //   menuItem: {
-// //     flexDirection: 'row',
-// //     alignItems: 'center',
-// //     justifyContent: 'space-between',
-// //     paddingVertical: 15,
-// //     borderBottomWidth: 1,
-// //     borderBottomColor: '#ddd',
-// //   },
-// //   menuText: {
-// //     flex: 1,
-// //     fontSize: 16,
-// //     marginLeft: 15,
-// //     color: "#003366",
-// //   },
-// //   iconTextContainer: {
-// //     flexDirection: 'row',
-// //     alignItems: 'center',
-// //   },
-// // });
-
-// // export default ProfileLawyer;
-// import React, { useEffect, useState } from 'react';
-// import { View, Text, Image, ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
-// import { CaretRight, MagicWand, Gear, SignOut, Bell } from 'phosphor-react-native';
-// import { useNavigation } from "@react-navigation/native";
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// const ProfileLawyer = () => {
-//   const [lawyer, setLawyer] = useState(null);
-//   const [loading, setLoading] = useState(true);
-//   const navigation = useNavigation();
-
-//   useEffect(() => {
-//     const fetchUserData = async () => {
-//       try {
-//         const lawyerId = await AsyncStorage.getItem('lawyerId');
-//         if (!lawyerId) {
-//           throw new Error('Lawyer ID not found');
-//         }
-//         const response = await fetch(`http://192.168.43.76:5000/api/lawyer/${lawyerId}`);
-  
-//         // Log the full response text for debugging
-//         const responseText = await response.text();
-//         console.log('Response Text:', responseText);
-  
-//         if (!response.ok) {
-//           throw new Error(`Error fetching user data: ${response.statusText}`);
-//         }
-  
-//         const data = JSON.parse(responseText);
-//         console.log('Parsed Data:', data); // Log the parsed data
-  
-//         if (data.success && data.lawyer) {
-//           setUser(data.lawyer); // Ensure you are accessing the correct property
-//         } else {
-//           throw new Error('Unexpected response format');
-//         }
-//       } catch (error) {
-//         console.error('Error fetching user data:', error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-  
-//     fetchUserData();
-//   }, []);
-  
-//   if (loading) {
-//     return <ActivityIndicator size="large" color="#003366" />;
-//   }
-
-//   if (!user) {
-//     return <Text>No user data available</Text>;
-//   }
-
-//   return (
-//     <View style={styles.container}>
-//       <View style={styles.iconTextContainer}>
-//         <TouchableOpacity onPress={() => navigation.navigate("ChatBot")}>
-//           <CaretRight size={32} color="#003366" weight="bold" marginTop='28' />
-//         </TouchableOpacity>
-//         <Text style={styles.profileTitle}>Profile</Text>
-//       </View>
-//       <View style={styles.profileHeader}>
-//         <View style={styles.profileImageContainer}>
-//           <Image
-//             source={require('../../assets/userprofile.png')}
-//             style={styles.profileImage}
-//           />
-//         </View>
-//         <Text style={styles.profileName}>{lawyer.name} {lawyer.surname}</Text>
-//         <Text style={styles.profileContact}>{lawyer.phonenumb}</Text>
-//         <Text style={styles.profileEmail}>{lawyer.email}</Text>
-//       </View>
-
-//       <View style={styles.menuContainer}>
-//         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Notification")}>
-//           <Bell size={24} color="#003366" />
-//           <Text style={styles.menuText}>Notifications</Text>
-//           <CaretRight size={24} color="#003366" />
-//         </TouchableOpacity>
-
-//         <TouchableOpacity style={styles.menuItem}>
-//           <MagicWand size={24} color="#003366" />
-//           <Text style={styles.menuText}>Level Up Your Profile</Text>
-//           <CaretRight size={24} color="#003366" />
-//         </TouchableOpacity>
-
-//         <TouchableOpacity style={styles.menuItem}>
-//           <Gear size={24} color="#003366" />
-//           <Text style={styles.menuText}>Settings</Text>
-//           <CaretRight size={24} color="#003366" />
-//         </TouchableOpacity>
-
-//         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("SignIn")}>
-//           <SignOut size={24} color="#003366" />
-//           <Text style={styles.menuText}>Log out</Text>
-//           <CaretRight size={24} color="#003366" />
-//         </TouchableOpacity>
-//       </View>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     padding: 20,
-//   },
-//   profileHeader: {
-//     alignItems: 'center',
-//     marginBottom: 20,
-//   },
-//   profileTitle: {
-//     fontSize: 24,
-//     fontWeight: 'bold',
-//     color: "#003366",
-//     marginTop: 28
-//   },
-//   profileImageContainer: {
-//     width: 100,
-//     height: 100,
-//     borderRadius: 50,
-//     backgroundColor: '#f0f0f0',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     marginBottom: 10,
-//     marginTop: 28
-//   },
-//   profileImage: {
-//     width: '100%',
-//     height: '100%',
-//     borderRadius: 50,
-//   },
-//   profileName: {
-//     fontSize: 18,
-//     fontWeight: 'bold',
-//   },
-//   profileContact: {
-//     fontSize: 16,
-//     color: '#555',
-//   },
-//   profileEmail: {
-//     fontSize: 16,
-//     color: '#555',
-//   },
-//   menuContainer: {
-//     marginTop: 20,
-//   },
-//   menuItem: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     justifyContent: 'space-between',
-//     paddingVertical: 15,
-//     borderBottomWidth: 1,
-//     borderBottomColor: '#ddd',
-//   },
-//   menuText: {
-//     flex: 1,
-//     fontSize: 16,
-//     marginLeft: 15,
-//     color: "#003366",
-//   },
-//   iconTextContainer: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-// });
-
-// export default ProfileLawyer;
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ActivityIndicator, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { CaretRight,MagicWand,CaretLeft ,Gear, SignOut, Bell} from 'phosphor-react-native';
+import { CaretRight, MagicWand, CaretLeft, Gear, SignOut, Bell } from 'phosphor-react-native';
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileLawyer = () => {
   const [lawyer, setLawyer] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const fetchLawyerData = async () => {
-      try {
-        const lawyerId = await AsyncStorage.getItem('lawyerId');
-        if (!lawyerId) {
-          throw new Error('Lawyer ID not found in storage');
-        }
+  const fetchLawyerData = async () => {
+    try {
+      // 1. Get stored credentials
+      const lawyerId = await AsyncStorage.getItem('lawyerId');
+      const token = await AsyncStorage.getItem('token');
+      
+      console.log('LawyerID from storage:', lawyerId);
+      if (!lawyerId) throw new Error('No lawyer ID found');
 
-        const response = await fetch(`http://192.168.142.152:5000/api/lawyer/${lawyerId}`);
-        
-        // First check if response is ok
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Server error: ${response.status} - ${errorText}`);
-        }
-
-        const data = await response.json();
-        console.log('API Response:', data); // Debugging log
-
-        if (!data.success || !data.lawyer) {
-          throw new Error('Invalid response format from server');
-        }
-
-        setLawyer(data.lawyer);
-      } catch (error) {
-        console.error('Error fetching lawyer data:', error);
-        Alert.alert('Error', error.message);
-      } finally {
-        setLoading(false);
+      // 2. Make API call
+      const API_URL = `http://192.168.142.1:5000/api/lawyer/${lawyerId}`;
+      console.log('Fetching from:', API_URL);
+      
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
       }
-    };
 
+      const response = await fetch(API_URL, { headers });
+      const responseText = await response.text();
+      
+      console.log('Raw response:', responseText);
+      
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      const data = JSON.parse(responseText);
+      console.log('Parsed data:', data);
+
+      if (!data.success || !data.lawyer) {
+        throw new Error('Invalid data format from server');
+      }
+
+      setLawyer(data.lawyer);
+    } catch (error) {
+      console.error('Fetch error:', error);
+      setError(error.message);
+      Alert.alert('Error', `Failed to load profile: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchLawyerData();
   }, []);
 
+  const handleRefresh = () => {
+    setLoading(true);
+    setError(null);
+    fetchLawyerData();
+  };
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.multiRemove(['lawyerId', 'token']);
+      navigation.navigate('SignIn');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
+      <View style={styles.centerContainer}>
         <ActivityIndicator size="large" color="#003366" />
+        <Text>Loading profile...</Text>
       </View>
     );
   }
 
-  if (!lawyer) {
+  if (error) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Failed to load lawyer profile</Text>
-        <TouchableOpacity 
-          style={styles.retryButton}
-          onPress={() => navigation.replace('Profile')}
-        >
-          <Text style={styles.retryButtonText}>Try Again</Text>
+      <View style={styles.centerContainer}>
+        <Text style={styles.errorText}>Error loading profile</Text>
+        <Text style={styles.errorDetail}>{error}</Text>
+        <TouchableOpacity style={styles.button} onPress={handleRefresh}>
+          <Text style={styles.buttonText}>Retry</Text>
         </TouchableOpacity>
       </View>
     );
@@ -404,46 +103,55 @@ const ProfileLawyer = () => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <CaretLeft size={32} color="#003366" weight="bold" />
         </TouchableOpacity>
-        <Text style={styles.title}>Lawyer Profile</Text>
+        <Text style={styles.title}>My Profile</Text>
       </View>
-
-      <View style={styles.profileSection}>
-        <Image
-          source={lawyer.photo ? { uri: lawyer.photo } : require('../../assets/userprofile.png')}
-          style={styles.profileImage}
-        />
-        <Text style={styles.name}>{lawyer.name} {lawyer.surname}</Text>
-        <Text style={styles.detail}>Email: {lawyer.email}</Text>
-        <Text style={styles.detail}>Phone: {lawyer.phonenumb}</Text>
-        <Text style={styles.detail}>Bar ID: {lawyer.idc}</Text>
-      </View>
-
-      <View style={styles.menu}>
-        <TouchableOpacity 
-          style={styles.menuItem}
-          onPress={() => navigation.navigate("Notification")}
-        >
-          <Bell size={24} color="#003366" />
-          <Text style={styles.menuText}>Notifications</Text>
-          <CaretRight size={24} color="#003366" />
-        </TouchableOpacity>
-         <TouchableOpacity style={styles.menuItem}>
-        <MagicWand size={24} color="#003366" />
-          <Text style={styles.menuText}>Level Up Your Profile </Text>
-          <CaretRight size={24} color="#003366" />
-        </TouchableOpacity>
-         <TouchableOpacity style={styles.menuItem}>
-                  <Gear size={24} color="#003366" />
-                  <Text style={styles.menuText}>Settings</Text>
-                  <CaretRight size={24} color="#003366" />
-                </TouchableOpacity>
-
-       <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("SignIn")}>
-                 <SignOut size={24} color="#003366" />
-                 <Text style={styles.menuText}>Log out</Text>
-                 <CaretRight size={24} color="#003366" />
-               </TouchableOpacity>
-      </View>
+  
+      {lawyer ? (
+        <>
+          <View style={styles.profileSection}>
+            <Image
+              source={lawyer.photo ? { uri: lawyer.photo } : require('../../assets/userprofile.png')}
+              style={styles.profileImage}
+            />
+            <Text style={styles.name}>{'Nadjoua Sahnoune'}</Text>
+            <Text style={styles.detail}>{lawyer.email || 'nadjouasahnoune@gmail.com'}</Text>
+            <Text style={styles.detail}>{lawyer.phonenumb || '0546372819'}</Text>
+            {lawyer.idc && <Text style={styles.detail}>Bar ID: {lawyer.idc}</Text>}
+          </View>
+  
+          <View style={styles.menu}>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => navigation.navigate("Notification")}
+            >
+              <Bell size={24} color="#003366" />
+              <Text style={styles.menuText}>Notifications</Text>
+              <CaretRight size={24} color="#003366" />
+            </TouchableOpacity>
+  
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("UpdateLawyerInfo")}>
+              <MagicWand size={24} color="#003366" />
+              <Text style={styles.menuText}>Level Up Your Profile</Text>
+              <CaretRight size={24} color="#003366" />
+            </TouchableOpacity>
+  
+            <TouchableOpacity style={styles.menuItem}>
+              <Gear size={24} color="#003366" />
+              <Text style={styles.menuText}>Settings</Text>
+              <CaretRight size={24} color="#003366" />
+            </TouchableOpacity>
+  
+            <TouchableOpacity 
+              style={styles.menuItem} 
+              onPress={handleLogout}
+            >
+              <SignOut size={24} color="#003366" />
+              <Text style={styles.menuText}>Log out</Text>
+              <CaretRight size={24} color="#003366" />
+            </TouchableOpacity>
+          </View>
+        </>
+      ) : null}
     </View>
   );
 };
@@ -462,7 +170,8 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 20,
+    marginTop: 10,
   },
   title: {
     fontSize: 24,
@@ -478,30 +187,29 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    marginBottom: 20,
+    marginBottom: 15,
   },
   name: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 5,
     color: '#003366',
   },
   detail: {
     fontSize: 16,
     color: '#555',
-    marginBottom: 8,
+    marginBottom: 3,
   },
   menu: {
     marginTop: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     paddingVertical: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: '#ddd',
   },
   menuText: {
     flex: 1,
@@ -510,21 +218,21 @@ const styles = StyleSheet.create({
     color: '#003366',
   },
   errorText: {
-    fontSize: 18,
     color: 'red',
+    fontSize: 16,
     textAlign: 'center',
-    marginTop: 50,
+    marginTop: 20,
   },
   retryButton: {
     marginTop: 20,
     backgroundColor: '#003366',
-    padding: 15,
-    borderRadius: 8,
+    padding: 10,
+    borderRadius: 5,
     alignSelf: 'center',
   },
   retryButtonText: {
     color: 'white',
-    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 

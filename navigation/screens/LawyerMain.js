@@ -30,7 +30,7 @@ const LawyerMain = ({ navigation }) => {
       setLoading(true);
       console.log('[DEBUG] Starting fetch...');
 
-      const response = await fetch('http://192.168.142.152:5000/api/lawyers', {
+      const response = await fetch('http://192.168.142.1:5000/api/lawyers', {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -51,7 +51,7 @@ const LawyerMain = ({ navigation }) => {
       const lawyersWithDefaults = lawyersData.map((lawyer, index) => ({
         ...lawyer,
         id: lawyer._id || lawyer.id || index.toString(),
-        photo: lawyer.photo || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+        photo:  'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
         experienceYears: lawyer.experienceYears || 0,
         wilaya: lawyer.wilaya || 'Not specified'
       }));
@@ -78,10 +78,11 @@ const LawyerMain = ({ navigation }) => {
   };
 
   useEffect(() => {
-    // Filter lawyers based on search text
+    // Filter lawyers based on search text (name, surname, or wilaya)
     const filtered = lawyers.filter(lawyer =>
       lawyer.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      lawyer.surname.toLowerCase().includes(searchText.toLowerCase())
+      lawyer.surname.toLowerCase().includes(searchText.toLowerCase()) ||
+      lawyer.wilaya.toLowerCase().includes(searchText.toLowerCase())
     );
     setFilteredLawyers(filtered);
   }, [searchText, lawyers]);
@@ -91,19 +92,23 @@ const LawyerMain = ({ navigation }) => {
     const photoWidth = screenWidth * 0.2; // 20% of screen width
     const infoWidth = screenWidth * 0.6 - 30; // 60% minus padding
     const buttonWidth = screenWidth * 0.2 - 10; // 20% minus padding
-    console.log('[DEBUG] Rendering item:', item.id);
+    
     return (
       <View style={styles.lawyerContainer}>
         <View style={styles.lawyerProfile}>
-          {/* 20% width for photo */}
+          {/* Circular profile image */}
           <View style={[styles.photoContainer, { width: photoWidth }]}>
             <Image
               source={{ uri: item.photo }}
-              style={[styles.lawyerImage, { width: photoWidth - 20, height: photoWidth - 20 }]}
+              style={[styles.lawyerImage, { 
+                width: photoWidth - 20, 
+                height: photoWidth - 20,
+                borderRadius: (photoWidth - 20) / 2 // Make it perfectly circular
+              }]}
             />
           </View>
 
-          {/* 60% width for information */}
+          {/* Lawyer information */}
           <View style={[styles.infoContainer, { width: infoWidth }]}>
             <Text style={styles.lawyerName} numberOfLines={1} ellipsizeMode="tail">
               {item.name} {item.surname}
@@ -124,7 +129,7 @@ const LawyerMain = ({ navigation }) => {
             </View>
           </View>
 
-          {/* 20% width for button */}
+          {/* Profile button */}
           <View style={[styles.buttonContainer, { width: buttonWidth }]}>
             <TouchableOpacity
               style={styles.profileButton}
@@ -153,7 +158,7 @@ const LawyerMain = ({ navigation }) => {
         <Text style={styles.title}>Search for a Lawyer</Text>
         <TouchableOpacity
           style={styles.messageIcon}
-          onPress={() => navigation.navigate('Messages')}
+          onPress={() => navigation.navigate('Conversations')}
         >
           <MaterialCommunityIcons
             name="message-text-outline"
@@ -173,7 +178,7 @@ const LawyerMain = ({ navigation }) => {
         />
         <TextInput
           style={styles.searchInput}
-          placeholder="Find a Lawyer ......"
+          placeholder="Search by name or wilaya..."
           placeholderTextColor="#999"
           value={searchText}
           onChangeText={setSearchText}
@@ -287,7 +292,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   lawyerImage: {
-    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: '#003366',
   },
   infoContainer: {
     paddingLeft: 12,

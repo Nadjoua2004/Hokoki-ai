@@ -30,7 +30,8 @@ const AnonymeProfile = ({ route, navigation }) => {
         navigation.navigate('ChatPage', {
           conversationId,
           userId,
-          lawyerId: lawyer.id
+          lawyerId: lawyer.id,
+          anonymousName: anonymousName
         });
       } catch (error) {
         ToastAndroid.show(`Error starting chat: ${error.message}`, ToastAndroid.SHORT);
@@ -150,6 +151,7 @@ const AnonymeProfile = ({ route, navigation }) => {
     );
   };
   
+
 
 const styles = StyleSheet.create({
   container: {

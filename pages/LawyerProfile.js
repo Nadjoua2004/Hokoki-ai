@@ -39,7 +39,7 @@ const LawyerProfile = ({ route, navigation }) => {
 
   const initiateConversation = async (userId, lawyerId) => {
     try {
-      const response = await fetch('http://192.168.142.152:5000/api/initiateConversation', {
+      const response = await fetch('http://192.168.142.1:5000/api/initiateConversation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, lawyerId }),
@@ -99,7 +99,7 @@ const LawyerProfile = ({ route, navigation }) => {
           </View>
           <View style={styles.aboutItem}>
             <Text style={styles.aboutNumber}>{lawyer.cases || 0}+</Text>
-            <Text style={styles.aboutLabel}>Achievements</Text>
+            <Text style={styles.aboutLabel}>Achievement</Text>
           </View>
           <View style={styles.aboutItem}>
             <Text style={styles.aboutNumber}>{lawyer.experienceYears || 0}+</Text>
@@ -134,21 +134,29 @@ const LawyerProfile = ({ route, navigation }) => {
         </View>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Experience Summary</Text>
-        <Text style={styles.summaryText}>{lawyer.experienceSummary || 'No summary provided'}</Text>
-      </View>
+   
+<View style={styles.section}>
+  <Text style={styles.sectionTitle}>Experience Summary</Text>
+  <Text style={styles.summaryText}>
+    {lawyer.experienceSummary ? lawyer.experienceSummary : 'No summary provided'}
+  </Text>
+</View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Languages</Text>
-        <View style={styles.languagesContainer}>
-          {lawyer.languages && lawyer.languages.map((language, index) => (
-            <View key={index} style={styles.languageTag}>
-              <Text style={styles.languageText}>{language}</Text>
-            </View>
-          ))}
+
+<View style={styles.section}>
+  <Text style={styles.sectionTitle}>Languages</Text>
+  <View style={styles.languagesContainer}>
+    {lawyer.languages && lawyer.languages.length > 0 ? (
+      lawyer.languages.map((language, index) => (
+        <View key={index} style={styles.languageTag}>
+          <Text style={styles.languageText}>{language}</Text>
         </View>
-      </View>
+      ))
+    ) : (
+      <Text style={styles.summaryText}>No languages specified</Text>
+    )}
+  </View>
+</View>
     </ScrollView>
   );
 };
@@ -160,6 +168,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   header: {
+    paddingTop:30,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

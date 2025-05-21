@@ -10,9 +10,10 @@ import {
   ActivityIndicator,
   ScrollView,
   FlatList,
-  TouchableHighlight
+  TouchableHighlight,
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UpdateLawyerInfo = ({ navigation }) => {
@@ -24,7 +25,6 @@ const UpdateLawyerInfo = ({ navigation }) => {
     wilaya: '',
     languages: []
   });
-  const [photo, setPhoto] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -42,12 +42,11 @@ const UpdateLawyerInfo = ({ navigation }) => {
           throw new Error('Lawyer ID not found in storage');
         }
 
-        // Validate ID format
         if (!/^[0-9a-fA-F]{24}$/.test(lawyerId)) {
           throw new Error('Invalid lawyer ID format');
         }
 
-        const response = await fetch(`http://192.168.142.152:5000/api/lawyer/${lawyerId}`);
+        const response = await fetch(`http://192.168.142.1:5000/api/lawyer/${lawyerId}`);
         console.log('Response status:', response.status);
 
         if (!response.ok) {
@@ -84,25 +83,6 @@ const UpdateLawyerInfo = ({ navigation }) => {
     fetchLawyerData();
   }, []);
 
-  const pickImage = async () => {
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        quality: 0.8,
-        allowsEditing: true,
-        aspect: [1, 1]
-      });
-  
-      if (!result.canceled) {
-        setPhoto(result.assets[0]);
-      }
-    } catch (error) {
-      console.error('Error picking image:', error);
-      Alert.alert('Error', 'Failed to select image');
-    }
-  };
-  
-
   const handleSave = async () => {
     setIsSaving(true);
     try {
@@ -126,29 +106,20 @@ const UpdateLawyerInfo = ({ navigation }) => {
         throw new Error('Wilaya is required');
       }
 
-      const formData = new FormData();
-
-      // Append all fields
-      formData.append('phonenumb', lawyer.phonenumb);
-      formData.append('description', lawyer.description);
-      formData.append('experienceYears', lawyer.experienceYears.toString());
-      formData.append('wilaya', lawyer.wilaya);
-      formData.append('languages', JSON.stringify(lawyer.languages));
-
-      // Append photo if selected
-      if (photo) {
-        formData.append('photo', {
-          uri: photo.uri,
-          type: 'image/jpeg',
-          name: 'profile.jpg'
-        });
-      }
-
       const response = await fetch(
-        `http://192.168.142.152:5000/api/lawyer/${lawyerId}`,
+        `http://192.168.142.1:5000/api/lawyer/${lawyerId}`,
         {
           method: 'PUT',
-          body: formData,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            phonenumb: lawyer.phonenumb,
+            description: lawyer.description,
+            experienceYears: lawyer.experienceYears,
+            wilaya: lawyer.wilaya,
+            languages: lawyer.languages
+          }),
         }
       );
 
@@ -186,106 +157,105 @@ const UpdateLawyerInfo = ({ navigation }) => {
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      keyboardShouldPersistTaps="handled"
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
     >
-      <Text style={styles.title}>Edit Profile</Text>
-
-      <Image
-        source={
-          photo
-            ? { uri: photo.uri }
-            : lawyer.photo
-            ? { uri: lawyer.photo }
-            : require('../../assets/userprofile.png')
-        }
-        style={styles.profileImage}
-      />
-
-      <TouchableOpacity
-        style={[styles.button, { marginBottom: 20 }]}
-        onPress={pickImage}
+      <ScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
       >
-        <Text style={styles.buttonText}>Change Photo</Text>
-      </TouchableOpacity>
+        <Text style={styles.title}>Edit Profile</Text>
 
-      <Text style={styles.label}>Phone Number</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter phone number"
-        keyboardType="phone-pad"
-        maxLength={10}
-        value={lawyer.phonenumb}
-        onChangeText={(text) => setLawyer({ ...lawyer, phonenumb: text })}
-      />
+        <Image
+          source={
+            lawyer.photo
+              ? { uri: lawyer.photo }
+              : require('../../assets/userprofile.png')
+          }
+          style={styles.profileImage}
+        />
 
-      <Text style={styles.label}>Description</Text>
-      <TextInput
-        style={[styles.input, styles.textArea]}
-        placeholder="Tell about your expertise"
-        multiline
-        numberOfLines={4}
-        value={lawyer.description}
-        onChangeText={(text) => setLawyer({ ...lawyer, description: text })}
-      />
+        <Text style={styles.label}>Phone Number</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter phone number"
+          keyboardType="phone-pad"
+          maxLength={10}
+          value={lawyer.phonenumb}
+          onChangeText={(text) => setLawyer({ ...lawyer, phonenumb: text })}
+        />
 
-      <Text style={styles.label}>Years of Experience</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="0"
-        keyboardType="numeric"
-        maxLength={2}
-        value={lawyer.experienceYears.toString()}
-        onChangeText={(text) => {
-          const num = parseInt(text) || 0;
-          setLawyer({ ...lawyer, experienceYears: Math.min(num, 50) });
-        }}
-      />
+        <Text style={styles.label}>Description</Text>
+        <TextInput
+          style={[styles.input, styles.textArea]}
+          placeholder="Tell about your expertise"
+          multiline
+          numberOfLines={4}
+          value={lawyer.description}
+          onChangeText={(text) => setLawyer({ ...lawyer, description: text })}
+        />
 
-      <Text style={styles.label}>Wilaya</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your wilaya"
-        value={lawyer.wilaya}
-        onChangeText={(text) => setLawyer({ ...lawyer, wilaya: text })}
-      />
+        <Text style={styles.label}>Years of Experience</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="0"
+          keyboardType="numeric"
+          maxLength={2}
+          value={lawyer.experienceYears.toString()}
+          onChangeText={(text) => {
+            const num = parseInt(text) || 0;
+            setLawyer({ ...lawyer, experienceYears: Math.min(num, 50) });
+          }}
+        />
 
-      <Text style={styles.label}>Languages</Text>
-      <FlatList
-        data={languagesList}
-        keyExtractor={(item) => item}
-        renderItem={({ item }) => (
-          <TouchableHighlight
-            style={[
-              styles.languageItem,
-              lawyer.languages.includes(item) && styles.selectedLanguage
-            ]}
-            onPress={() => toggleLanguage(item)}
-            underlayColor="#ddd"
-          >
-            <Text style={styles.languageText}>{item}</Text>
-          </TouchableHighlight>
-        )}
-        numColumns={3}
-        columnWrapperStyle={styles.languageColumn}
-      />
+        <Text style={styles.label}>Wilaya</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your wilaya"
+          value={lawyer.wilaya}
+          onChangeText={(text) => setLawyer({ ...lawyer, wilaya: text })}
+          onSubmitEditing={() => {}}
+        />
 
-      <TouchableOpacity
-        style={[
-          styles.button,
-          isSaving && styles.disabledButton
-        ]}
-        onPress={handleSave}
-        disabled={isSaving}
-      >
-        {isSaving ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Save Changes</Text>
-        )}
-      </TouchableOpacity>
-    </ScrollView>
+        <Text style={styles.label}>Languages</Text>
+        <View style={styles.languagesContainer}>
+          {languagesList.map((item) => (
+            <TouchableHighlight
+              key={item}
+              style={[
+                styles.languageItem,
+                lawyer.languages.includes(item) && styles.selectedLanguage
+              ]}
+              onPress={() => toggleLanguage(item)}
+              underlayColor="#ddd"
+            >
+              <Text style={[
+                styles.languageText,
+                lawyer.languages.includes(item) && styles.selectedLanguageText
+              ]}>
+                {item}
+              </Text>
+            </TouchableHighlight>
+          ))}
+        </View>
+
+        <TouchableOpacity
+          style={[
+            styles.button,
+            isSaving && styles.disabledButton
+          ]}
+          onPress={handleSave}
+          disabled={isSaving}
+        >
+          {isSaving ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>Save Changes</Text>
+          )}
+        </TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -353,12 +323,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  languagesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
   languageItem: {
+    width: '30%',
     padding: 10,
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 8,
-    margin: 5,
+    marginBottom: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -370,8 +347,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#003366',
   },
-  languageColumn: {
-    justifyContent: 'space-between',
+  selectedLanguageText: {
+    color: '#fff',
   },
 });
 

@@ -4,31 +4,38 @@ const messageSchema = new mongoose.Schema({
   conversationId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Conversation',
-    required: true
+    required: true,
+    index: true
   },
   sender: {
     type: mongoose.Schema.Types.ObjectId,
-    refPath: 'senderModel'
+    refPath: 'senderModel',
+    required: true
   },
   senderModel: {
     type: String,
-    enum: ['User', 'Lawyer']
+    enum: ['User', 'Lawyer'],
+    required: true
   },
   receiver: {
     type: mongoose.Schema.Types.ObjectId,
-    refPath: 'receiverModel'
+    refPath: 'receiverModel',
+    required: true
   },
   receiverModel: {
     type: String,
-    enum: ['User', 'Lawyer']
+    enum: ['User', 'Lawyer'],
+    required: true
   },
   content: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
   timestamp: {
     type: Date,
-    default: Date.now
+    default: Date.now,
+    index: true
   },
   read: {
     type: Boolean,
@@ -36,4 +43,9 @@ const messageSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('Message', messageSchema);
+// Add indexes for better performance
+messageSchema.index({ conversationId: 1, timestamp: 1 });
+
+const Message = mongoose.model('Message', messageSchema);
+
+module.exports = Message;

@@ -31,7 +31,7 @@ const DocumentMain = ({ navigation }) => {
   const fetchDocuments = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://192.168.142.152:5000/api/documents', {
+      const response = await fetch('http://192.168.142.1:5000/api/documents', {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'

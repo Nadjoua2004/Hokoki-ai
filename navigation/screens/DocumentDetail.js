@@ -38,7 +38,7 @@ const DocumentDetail = ({ route, navigation }) => {
   const fetchDocument = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://192.168.142.152:5000/api/documents/${documentId}`);
+      const response = await fetch(`http://192.168.142.1:5000/api/documents/${documentId}`);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -58,7 +58,7 @@ const DocumentDetail = ({ route, navigation }) => {
   const fetchRelatedDocuments = async () => {
     try {
       setRefreshing(true);
-      const response = await fetch(`http://192.168.142.152:5000/api/documents/related/${documentId}`);
+      const response = await fetch(`http://192.168.142.1:5000/api/documents/related/${documentId}`);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
